@@ -10,9 +10,9 @@ public class CDDGame {
 			int Alpha = 1;
 		new Window().Create();
 		Window.SetRGBA(Red, Green, Blue, Alpha);
-		Window.Update(1000);
+		Window.Update(1);
 
-		while (true) {
+		while (!glfwWindowShouldClose(Window.Window)) {
 			// WASD
 			int KeyW = Input.KeyPressed(Window.Window, GLFW_KEY_W); // Increaces Red By 10
 			int KeyA = Input.KeyPressed(Window.Window, GLFW_KEY_A); // INcreaces Green By 10
