@@ -11,8 +11,9 @@ public class CDDGame {
 
 		new Window().Create();
 		Window.SetRGBA(Red, Green, Blue, Alpha);
-		Window.Update(1);
+		Window.Update(300);
 		long LastMilliTime = Time.CurrentMilliTime();
+		//long LastKeyCheck = Time.CurrentMilliTime();
 
 		while (!glfwWindowShouldClose(Window.Window)) {
 			// WASD
@@ -30,10 +31,12 @@ public class CDDGame {
 			// Tab
 			int Tab = Input.KeyPressed(Window.Window, GLFW_KEY_TAB);
 
+			long CurrentTime = Time.GetDiffInMilliSeconds(LastMilliTime);
+
 			// WASD Controls
 			if (KeyW == 1) {
 				Red = Red + 10;
-				if (Red > 255) {
+				if (Red > 255 && CurrentTime >= 300) {
 					Red = 255;
 					System.out.printf("Red: " + 255 + " (Maximum Value)\n");
 				}
@@ -43,7 +46,7 @@ public class CDDGame {
 			}
 			if (KeyA == 1) {
 				Green = Green + 10;
-				if (Green > 255) {
+				if (Green > 255 && CurrentTime >= 300) {
 					Green = 255;
 					System.out.printf("Green: " + 255 + " (Maximum Value)\n");
 				}
@@ -52,7 +55,7 @@ public class CDDGame {
 			}
 			if (KeyS == 1) {
 				Blue = Blue + 10;
-				if (Blue > 255) {
+				if (Blue > 255 && CurrentTime >= 300) {
 					Blue = 255;
 					System.out.printf("Blue: " + 255 + " (Maximum Value)\n");
 				}
@@ -62,7 +65,7 @@ public class CDDGame {
 			}
 			if (KeyD == 1) {
 				Alpha = Alpha + 10;
-				if (Alpha >= 255) {
+				if (Alpha >= 255 && CurrentTime >= 300) {
 					Alpha = 255;
 					System.out.printf("Alpha: " + 255 + " (Maximum Value)\n");
 				}
@@ -75,7 +78,7 @@ public class CDDGame {
 			// Arrow Controls
 			if (UpArrow == 1) {
 				Red = Red - 10;
-				if (Red < 0) {
+				if (Red < 0 && CurrentTime >= 300) {
 					Red = 0;
 					System.out.printf("Red: " + 0 + " (Minimum Value)\n");
 				}
@@ -84,7 +87,7 @@ public class CDDGame {
 			}
 			if (RightArrow == 1) {
 				Green = Green - 10;
-				if (Green < 0) {
+				if (Green < 0 && CurrentTime >= 300) {
 					Green = 0;
 					System.out.printf("Green: " + 0 + " (Minimum Value)\n");
 				}
@@ -93,7 +96,7 @@ public class CDDGame {
 			}
 			if (DownArrow == 1) {
 				Blue = Blue - 10;
-				if (Blue < 0) {
+				if (Blue < 0 && CurrentTime >= 300) {
 					Blue = 0;
 					System.out.printf("Blue: " + 0 + " (Minimum Value)\n");
 				}
@@ -102,14 +105,13 @@ public class CDDGame {
 			}
 			if (LeftArrow == 1) {
 				Alpha = Alpha - 10;
-				if (Alpha < 0) {
+				if (Alpha < 0 && CurrentTime >= 300) {
 					Alpha = 0;
 					System.out.printf("Alpha: " + 0 + " (Minimum Value)\n");
 				}
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
 			}
-			long CurrentTime = Time.GetDiffInMilliSeconds(LastMilliTime);
 			if (Tab == 1 && CurrentTime >= 300) {
 				System.out.printf("Red: " + Red + ", Green: " + Green + ", Blue: " + Blue + ", Alpha: " + Alpha + "\n");
 				LastMilliTime = System.currentTimeMillis();
