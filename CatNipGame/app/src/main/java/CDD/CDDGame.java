@@ -4,10 +4,11 @@ import static org.lwjgl.glfw.GLFW.*;
 
 public class CDDGame {
 	public static void main(String[] args) {
-		int Red = 1;
-			int Green = 1;
-			int Blue = 1;
-			int Alpha = 1;
+		int Red = 0;
+			int Green = 0;
+			int Blue = 0;
+			int Alpha = 0;
+
 		new Window().Create();
 		Window.SetRGBA(Red, Green, Blue, Alpha);
 		Window.Update(1);
@@ -24,6 +25,9 @@ public class CDDGame {
 			int RightArrow = Input.KeyPressed(Window.Window, GLFW_KEY_RIGHT); // Decreaces Green By 10
 			int DownArrow = Input.KeyPressed(Window.Window, GLFW_KEY_DOWN); // Decreaces Blue By 10
 			int LeftArrow = Input.KeyPressed(Window.Window, GLFW_KEY_LEFT); // Decreaces Alpha By 10
+
+			// Tab
+			int Tab = Input.KeyPressed(Window.Window, GLFW_KEY_TAB);
 
 			// WASD Controls
 			if (KeyW == 1) {
@@ -73,6 +77,9 @@ public class CDDGame {
 				Alpha = Alpha - 10;
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
+			}
+			if (Tab == 1) {
+				System.out.printf("Red: " + Red + ", Green: " + Green + ", Blue: " + Blue + ", Alpha: " + Alpha + "\n");
 			}
 
 			Window.Update(50);
