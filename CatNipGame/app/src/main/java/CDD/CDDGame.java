@@ -34,6 +34,7 @@ public class CDDGame {
 				Red = Red + 10;
 				if (Red > 255) {
 					Red = 255;
+					System.out.printf("Red: " + 255 + " (Maximum Value)\n");
 				}
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
@@ -43,6 +44,7 @@ public class CDDGame {
 				Green = Green + 10;
 				if (Green > 255) {
 					Green = 255;
+					System.out.printf("Green: " + 255 + " (Maximum Value)\n");
 				}
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
@@ -51,6 +53,7 @@ public class CDDGame {
 				Blue = Blue + 10;
 				if (Blue > 255) {
 					Blue = 255;
+					System.out.printf("Blue: " + 255 + " (Maximum Value)\n");
 				}
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
@@ -58,8 +61,9 @@ public class CDDGame {
 			}
 			if (KeyD == 1) {
 				Alpha = Alpha + 10;
-				if (Alpha > 255) {
+				if (Alpha >= 255) {
 					Alpha = 255;
+					System.out.printf("Alpha: " + 255 + " (Maximum Value)\n");
 				}
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
@@ -72,6 +76,7 @@ public class CDDGame {
 				Red = Red - 10;
 				if (Red < 0) {
 					Red = 0;
+					System.out.printf("Red: " + 0 + " (Minimum Value)\n");
 				}
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
@@ -80,6 +85,7 @@ public class CDDGame {
 				Green = Green - 10;
 				if (Green < 0) {
 					Green = 0;
+					System.out.printf("Green: " + 0 + " (Minimum Value)\n");
 				}
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
@@ -88,6 +94,7 @@ public class CDDGame {
 				Blue = Blue - 10;
 				if (Blue < 0) {
 					Blue = 0;
+					System.out.printf("Blue: " + 0 + " (Minimum Value)\n");
 				}
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
@@ -97,6 +104,7 @@ public class CDDGame {
 				Alpha = Alpha - 10;
 				if (Alpha < 0) {
 					Alpha = 0;
+					System.out.printf("Alpha: " + 0 + " (Minimum Value)\n");
 				}
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
