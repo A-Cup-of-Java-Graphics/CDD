@@ -2,6 +2,7 @@ package CDD;
 import static org.lwjgl.glfw.GLFW.glfwGetKey;
 import static org.lwjgl.glfw.GLFW.*;
 
+@SuppressWarnings("unused")
 public class Input {
     public static int KeyPressed(long WindowHandle, int Key) {
         // If this returns 0, then the key was released

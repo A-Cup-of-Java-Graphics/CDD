@@ -167,7 +167,7 @@ public class Window {
     static long LastTime;
 
     public static void Update(int TimeToRun) { // This function loops the window buffer & renders new frames
-        long loopstart = Time.StartMilliTime();
+        long loopstart = Time.CurrentMilliTime();
         while (!glfwWindowShouldClose(Window)) {
             glfwWindowHint(GLFW_REFRESH_RATE, new Window().FrameLimit);
             // Poll events (Key/mouse events)

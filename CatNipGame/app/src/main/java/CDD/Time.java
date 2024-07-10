@@ -19,7 +19,7 @@ public class Time {
         TimeStartedInNano = System.nanoTime();
     }
 
-    public static long StartMilliTime() {
+    public static long CurrentMilliTime() {
         return System.currentTimeMillis();
     }
 

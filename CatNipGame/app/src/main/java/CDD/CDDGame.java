@@ -12,6 +12,7 @@ public class CDDGame {
 		new Window().Create();
 		Window.SetRGBA(Red, Green, Blue, Alpha);
 		Window.Update(1);
+		long LastMilliTime = Time.CurrentMilliTime();
 
 		while (!glfwWindowShouldClose(Window.Window)) {
 			// WASD
@@ -98,7 +99,6 @@ public class CDDGame {
 				}
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
-			
 			}
 			if (LeftArrow == 1) {
 				Alpha = Alpha - 10;
@@ -109,8 +109,10 @@ public class CDDGame {
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
 			}
-			if (Tab == 1) {
+			long CurrentTime = Time.GetDiffInMilliSeconds(LastMilliTime);
+			if (Tab == 1 && CurrentTime >= 300) {
 				System.out.printf("Red: " + Red + ", Green: " + Green + ", Blue: " + Blue + ", Alpha: " + Alpha + "\n");
+				LastMilliTime = System.currentTimeMillis();
 			}
 
 			Window.Update(50);
