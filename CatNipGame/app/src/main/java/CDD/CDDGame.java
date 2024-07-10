@@ -32,23 +32,35 @@ public class CDDGame {
 			// WASD Controls
 			if (KeyW == 1) {
 				Red = Red + 10;
+				if (Red > 255) {
+					Red = 255;
+				}
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
 			
 			}
 			if (KeyA == 1) {
 				Green = Green + 10;
+				if (Green > 255) {
+					Green = 255;
+				}
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
 			}
 			if (KeyS == 1) {
 				Blue = Blue + 10;
+				if (Blue > 255) {
+					Blue = 255;
+				}
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
 			
 			}
 			if (KeyD == 1) {
 				Alpha = Alpha + 10;
+				if (Alpha > 255) {
+					Alpha = 255;
+				}
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
 			}
@@ -58,23 +70,34 @@ public class CDDGame {
 			// Arrow Controls
 			if (UpArrow == 1) {
 				Red = Red - 10;
+				if (Red < 0) {
+					Red = 0;
+				}
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
-			
 			}
 			if (RightArrow == 1) {
 				Green = Green - 10;
+				if (Green < 0) {
+					Green = 0;
+				}
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
 			}
 			if (DownArrow == 1) {
 				Blue = Blue - 10;
+				if (Blue < 0) {
+					Blue = 0;
+				}
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
 			
 			}
 			if (LeftArrow == 1) {
 				Alpha = Alpha - 10;
+				if (Alpha < 0) {
+					Alpha = 0;
+				}
 				Window.SetRGBA(Red, Green, Blue, Alpha);
 				Window.Update(50);
 			}
