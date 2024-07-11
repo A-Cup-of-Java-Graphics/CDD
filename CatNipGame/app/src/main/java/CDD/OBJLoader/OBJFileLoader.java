@@ -15,7 +15,7 @@ import org.joml.Vector3f;
 
 import baseComponents.Vao;
 import game.Main;
-import models.Model;
+import RawModels.Model;
 import renderer.Loader;
 import util.CustomFile;
 
