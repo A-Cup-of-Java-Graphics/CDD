@@ -24,7 +24,7 @@ public class CDDGame {
 			int Blue = 0;
 			int Alpha = 0;
 		SyncTimer timer = new SyncTimer(SyncTimer.JAVA_NANO);
-		Window.Create();
+		new Window().Create();
         GL.createCapabilities();
 		Window.SetRGBA(Red, Green, Blue, Alpha);
 		//Window.Update(300);
