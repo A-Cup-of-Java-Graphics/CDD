@@ -4,6 +4,8 @@ import java.nio.DoubleBuffer;
 import org.lwjgl.BufferUtils;
 
 import static org.lwjgl.glfw.GLFW.*;
+import CDDPhysics.EnumKeys;
+import CDDPhysics.Scene;
 
 @SuppressWarnings("unused")
 public class Input {
@@ -29,5 +31,18 @@ public class Input {
         DoubleBuffer b2 = BufferUtils.createDoubleBuffer(1);
         glfwGetCursorPos(WindowHandle, b1, b2);
         System.out.println("x : " + b1.get(0) + ", y = " + b2.get(0));
+    }
+
+    public static void handleInputs(long window, Scene scene){
+        if(KeyPressed(window, scene.getSettings().getKeyFor(EnumKeys.MOVE_FORWARD))){
+            scene.getSettings().hitKey(EnumKeys.MOVE_FORWARD).accept(scene);;
+        }else if(KeyPressed(window, scene.getSettings().getKeyFor(EnumKeys.MOVE_BACKWARD))){
+            scene.getSettings().hitKey(EnumKeys.MOVE_BACKWARD).accept(scene);;
+        }
+        if(KeyPressed(window, scene.getSettings().getKeyFor(EnumKeys.MOVE_LEFT))){
+            scene.getSettings().hitKey(EnumKeys.MOVE_LEFT).accept(scene);;
+        }else if(KeyPressed(window, scene.getSettings().getKeyFor(EnumKeys.MOVE_RIGHT))){
+            scene.getSettings().hitKey(EnumKeys.MOVE_RIGHT).accept(scene);;
+        }
     }
 }

@@ -50,9 +50,6 @@ public class CDDGame {
 			//long CurrentTime = Time.GetDiffInMilliSeconds(LastMilliTime);
 			Input.handleInputs(window, scene);
 			renderer.render(camera);
-			Window.Update();
-			//Window.framerate(50);
-		}
 	}
 
 }
