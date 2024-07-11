@@ -1,13 +1,10 @@
-package CDD;
+package CDDPhysics;
 
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
 import org.lwjgl.glfw.GLFW;
-
-import CDDPhysics.EnumKeys;
-import CDDPhysics.Scene;
 
 public class Settings {
 

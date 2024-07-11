@@ -3,8 +3,6 @@ package CDDPhysics;
 import java.util.ArrayList;
 import java.util.List;
 
-import CDD.Settings;
-
 public class Scene {
 
     private List<GameObject> objects = new ArrayList<GameObject>();
@@ -38,7 +36,7 @@ public class Scene {
 
     public void removeObject(GameObject object) {
         // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'removeObject'");
+        objects.remove(object);
     }
 
     public Character getCharacter(){

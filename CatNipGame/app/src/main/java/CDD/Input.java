@@ -14,9 +14,9 @@ public class Input {
         // If this function returns 0, then the key was released
         
         int KeyReturned = glfwGetKey(WindowHandle, Key);
-        if (KeyReturned == 1) {
+        if (KeyReturned == GLFW_PRESS) {
             return true;
-        } else if (KeyReturned == 0) {
+        } else if (KeyReturned == GLFW_RELEASE) {
             return false;
         }
 
