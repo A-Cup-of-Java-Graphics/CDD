@@ -9,13 +9,18 @@ import CDDPhysics.Scene;
 
 @SuppressWarnings("unused")
 public class Input {
-    public static int Pressed(long WindowHandle, int Key) {
-        // If this returns 0, then the key was released
-        // If this returns 1, then the key was pressed
-        // If this returns 2, then the key was held
-
+    public static boolean Pressed(long WindowHandle, int Key) {
+        // If this function returns 1, then the key was pressed
+        // If this function returns 0, then the key was released
+        
         int KeyReturned = glfwGetKey(WindowHandle, Key);
-        return KeyReturned;
+        if (KeyReturned == 1) {
+            return true;
+        } else if (KeyReturned == 0) {
+            return false;
+        }
+
+        return false;
     }
 
     public static int Mouse(long WindowHandle, int MouseButton) {

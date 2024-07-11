@@ -8,7 +8,7 @@ import CDD.models.TexturedModel;
 
 public class Sprite {
 
-    private Vector3f position;
+    public Vector3f position;
     private Vector2f scale;
     private float rotation;
     private TexturedModel model;
