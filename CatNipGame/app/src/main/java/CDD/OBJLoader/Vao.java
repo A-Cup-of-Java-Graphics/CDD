@@ -86,7 +86,7 @@ public class Vao {
 	}
 	
 	public void createIndexBuffer(int[] indices) {
-		this.indexBuffer = new Vbo(GL15.GL_ELEMENT_ARRAY_BUFFER);
+		this.indexBuffer = new Vbo(null, GL15.GL_ELEMENT_ARRAY_BUFFER, id, id, id);
 		indexBuffer.bind();
 		indexBuffer.storeData(indices);
 		this.indexCount = indices.length;
