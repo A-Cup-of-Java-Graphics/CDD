@@ -25,6 +25,10 @@ import org.opencv.utils.Converters;
 * @author GRIP
 */
 public class GripPipeline {
+	public static void main(String[] args) {
+		GripPipeline pipeline = new GripPipeline();
+        pipeline.process("CatNipGame\\app\\src\\main\\resources\\CDD\\textures\\map.png");
+	}
 
 	//Outputs
 	private Mat rgbThreshold0Output = new Mat();
