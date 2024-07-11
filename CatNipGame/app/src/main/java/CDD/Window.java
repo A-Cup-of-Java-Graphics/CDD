@@ -1,5 +1,5 @@
 package CDD;
-//
+
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
@@ -28,7 +28,7 @@ public class Window {
     public static float NAlpha;
 
 
-    public long Create() { // Initialize The Window
+    public void Create() { // Initialize The Window
         // Error Callback
         GLFWErrorCallback.createPrint(System.err).set();
 
@@ -106,8 +106,7 @@ public class Window {
         // TLDR: Everything Will Break Without The Next Line
         GL.createCapabilities();
 
-        Update(10);
-        return WindowHandle; // Returns the windows memory address
+        Update(10); // Starts the window off for 10 milliseconds
     }
 
     public static void Size(int Width, int Height) {
