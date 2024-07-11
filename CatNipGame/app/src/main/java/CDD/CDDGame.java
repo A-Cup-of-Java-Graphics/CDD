@@ -22,7 +22,7 @@ public class CDDGame {
 			int Blue = 0;
 			int Alpha = 0;
 
-		long window = Window.Create();
+		new Window().Create();
         GL.createCapabilities();
 		Window.SetRGBA(Red, Green, Blue, Alpha);
 		//Window.Update(300);
@@ -45,11 +45,10 @@ public class CDDGame {
 		//renderer.backgroundRenderer.setBackground(back);
 		renderer.spriteRenderer.addSprite(cat);
 		renderer.spriteRenderer.addSprite(back);
-		while (!glfwWindowShouldClose(Window.Window)) {
-			Window.clear();
+		while (!glfwWindowShouldClose(Window.WindowHandle)) {
 			//long CurrentTime = Time.GetDiffInMilliSeconds(LastMilliTime);
-			Input.handleInputs(window, scene);
+			Input.handleInputs(Window.WindowHandle, scene);
 			renderer.render(camera);
+		}
 	}
-
 }

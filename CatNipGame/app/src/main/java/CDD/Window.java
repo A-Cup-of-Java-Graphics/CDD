@@ -59,7 +59,7 @@ public class Window {
     static int WindowWidth;
     static int WindowHeight;
 
-    public static long Window;
+    public static long WindowHandle;
     static String Title;
     static String Type = "defult"; // Fullscreen, Windowed, Custom, ect.
     static boolean resizable = true;
@@ -110,20 +110,20 @@ public class Window {
         if (Title == null) {
             Title = "";
         }
-        Window = glfwCreateWindow(WindowWidth, WindowHeight, Title, NULL, NULL);
-        glfwMakeContextCurrent(Window);
+        WindowHandle = glfwCreateWindow(WindowWidth, WindowHeight, Title, NULL, NULL);
+        glfwMakeContextCurrent(WindowHandle);
         
-        if (Window == NULL) {
+        if (WindowHandle == NULL) {
             throw new IllegalStateException("Failed To Create GLFW Window");
         }
 
         // Make OpenGL the context current
-        glfwMakeContextCurrent(Window);
+        glfwMakeContextCurrent(WindowHandle);
         // Enable v-sync
         glfwSwapInterval(0);
 
         // Make window visable
-        glfwShowWindow(Window);
+        glfwShowWindow(WindowHandle);
 
         // This line is critical for LWJGL's interoperation with GLFW's
         // OpenGL context, or any context that is managed externally.
@@ -133,13 +133,13 @@ public class Window {
         // TLDR: Everything Will Break Without The Next Line
         GL.createCapabilities();
 
-        glfwSetWindowSize(Window, WindowWidth, WindowHeight);
+        glfwSetWindowSize(WindowHandle, WindowWidth, WindowHeight);
         MemoryStack stack = stackPush();
         IntBuffer pWidth = stack.mallocInt(1);
         IntBuffer pHeight = stack.mallocInt(1);
-        glfwGetWindowSize(Window, pWidth, pHeight);
+        glfwGetWindowSize(WindowHandle, pWidth, pHeight);
         GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        glfwSetWindowPos(Window, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
+        glfwSetWindowPos(WindowHandle, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
 
         Update(10);
         return 0; // Returns the windows memory address
@@ -168,7 +168,7 @@ public class Window {
 
     public static void Update(int TimeToRun) { // This function loops the window buffer & renders new frames
         long loopstart = Time.CurrentMilliTime();
-        while (!glfwWindowShouldClose(Window)) {
+        while (!glfwWindowShouldClose(WindowHandle) && CurrentTime >= TimeToRun && TimeToRun != 0) {
             glfwWindowHint(GLFW_REFRESH_RATE, new Window().FrameLimit);
             // Poll events (Key/mouse events)
             glfwPollEvents();
@@ -180,7 +180,7 @@ public class Window {
             glClear(GL_COLOR_BUFFER_BIT);
 
             // Swaps the buffers to the last buffer sent to the hadle
-            glfwSwapBuffers(Window);
+            glfwSwapBuffers(WindowHandle);
 
             // Replace this with the Time.GetTimeInSeconds(); function
             CurrentTime = Time.GetDiffInMilliSeconds(loopstart);
@@ -188,12 +188,6 @@ public class Window {
                 System.out.println(CurrentFramesRendered);
                 CurrentFramesRendered = 0;
                 LastTime = CurrentTime;
-            }
-
-            // Check If The TTR Is Up
-            long CurrentTime = Time.GetDiffInMilliSeconds(loopstart);
-            if (CurrentTime >= TimeToRun && TimeToRun != 0) {
-                break;
             }
             
             CurrentFramesRendered++;
