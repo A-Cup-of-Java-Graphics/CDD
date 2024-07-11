@@ -38,6 +38,10 @@ repositories {
 }
 
 dependencies {
+  implementation 'org.openpnp:opencv:4.9.0-0'
+}
+
+dependencies {
     implementation platform("org.lwjgl:lwjgl-bom:$lwjglVersion")
 
     implementation "org.lwjgl:lwjgl"
