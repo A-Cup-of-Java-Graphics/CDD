@@ -12,13 +12,13 @@ import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
 //mport static org.lwjgl.opengl.GL11.glColor3d;
 //import static org.lwjgl.opengl.GL11.glGetString;
-import static org.lwjgl.system.MemoryStack.stackPush;
+//import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
 
 //import java.lang.management.ManagementFactory;
 //import java.lang.management.OperatingSystemMXBean;
 //import java.lang.management.ManagementFactory;
-import java.nio.IntBuffer;
+//import java.nio.IntBuffer;
 //import java.util.Set;
 
 //import javax.management.monitor.Monitor;
@@ -26,11 +26,11 @@ import java.nio.IntBuffer;
 //import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
 //import org.lwjgl.glfw.GLFWImage;
-import org.lwjgl.glfw.GLFWVidMode;
+//import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLCapabilities;
-import org.lwjgl.system.MemoryStack;
+//import org.lwjgl.system.MemoryStack;
 
 public class Window {
     static int WindowWidth;
@@ -38,9 +38,9 @@ public class Window {
 
     public static long WindowHandle;
     static String Title;
-    static String Type = "defult"; // Fullscreen, Windowed, Custom, ect.
-    static boolean resizable = true;
-    public static int FrameLimit;
+    public static String Type = "default"; // Fullscreen, Windowed, Custom, ect.
+    static boolean Resizable = true;
+    static boolean AllowDecorations = true;
 
     // Background Color
     public static float NRed;
@@ -49,7 +49,7 @@ public class Window {
     public static float NAlpha;
 
 
-    public static long Create() { // Initialize The Window
+    public long Create() { // Initialize The Window
         // Error Callback
         GLFWErrorCallback.createPrint(System.err).set();
 
@@ -59,7 +59,7 @@ public class Window {
         }
 
         // Configure GLFW
-        if (resizable == true) {
+        if (Resizable == true) {
             glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE);
         }
         else {
@@ -67,20 +67,29 @@ public class Window {
         }
 
         if (Type.toLowerCase() == "maximized") {
+            Resizable = true;
             glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+            glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
         } else if(Type.toLowerCase() == "defult") {
+
             WindowWidth = 300;
             WindowHeight = 500;
 
         } else if(Type.toLowerCase() == "fullscreen") {
-            //glfwSetWindowMonitor(Window, Monitor, 0, 0, mode.width(), mode.height(), mode.refreshRate());
+            glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
+            glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
         } else {
             System.out.println(Type + " Is Not A Valid Type. Please Choose Between maximized, defult, and fullscreen");
         }
 
-        glfwDefaultWindowHints();
+        if (AllowDecorations == true && Type.toLowerCase() != "fullscreen") {
+            glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
+        } else if (AllowDecorations == false) {
+            glfwWindowHint(GLFW_DECORATED, GLFW_FALSE);
+        }
+
+        //glfwDefaultWindowHints();
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
-        glfwWindowHint(GLFW_REFRESH_RATE, 100);
 		glfwWindowHint(GLFW_SAMPLES, 4);
         //3.3 is the most modern version, 3.2 is the minimum version for macOS
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
@@ -118,14 +127,6 @@ public class Window {
         // TLDR: Everything Will Break Without The Next Line
         GL.createCapabilities();
 
-        glfwSetWindowSize(WindowHandle, WindowWidth, WindowHeight);
-        MemoryStack stack = stackPush();
-        IntBuffer pWidth = stack.mallocInt(1);
-        IntBuffer pHeight = stack.mallocInt(1);
-        glfwGetWindowSize(WindowHandle, pWidth, pHeight);
-        GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-        glfwSetWindowPos(WindowHandle, (vidmode.width() - pWidth.get(0)) / 2, (vidmode.height() - pHeight.get(0)) / 2);
-
         Update(10);
         return WindowHandle; // Returns the windows memory address
     }
@@ -153,8 +154,7 @@ public class Window {
 
     public static void Update(int TimeToRun) { // This function loops the window buffer & renders new frames
         long loopstart = Time.CurrentMilliTime();
-        while (!glfwWindowShouldClose(WindowHandle) && CurrentTime >= TimeToRun && TimeToRun != 0) {
-            glfwWindowHint(GLFW_REFRESH_RATE, new Window().FrameLimit);
+        while (!glfwWindowShouldClose(WindowHandle)) {
             // Poll events (Key/mouse events)
             glfwPollEvents();
             
@@ -173,6 +173,10 @@ public class Window {
                 System.out.println(CurrentFramesRendered);
                 CurrentFramesRendered = 0;
                 LastTime = CurrentTime;
+            }
+
+            if (CurrentTime >= TimeToRun && TimeToRun != 0) {
+                break;
             }
             
             CurrentFramesRendered++;
