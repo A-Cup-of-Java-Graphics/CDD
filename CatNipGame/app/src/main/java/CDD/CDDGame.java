@@ -30,9 +30,8 @@ public class CDDGame {
 		//Window.Update(300);
 		long LastMilliTime = Time.CurrentMilliTime();
 		//long LastKeyCheck = Time.CurrentMilliTime();
-		float aspectRatio = (float) Window.WindowWidth / (float) Window.WindowHeight;
 		Camera camera = new Camera(new Vector3f(0, 0, 0));
-		camera.setOrthographic(-aspectRatio, aspectRatio, 1, -1, 0.001f, 1000);
+		camera.calculateOrthographic(0.0001f, 1000);
 		Vao vao = new Vao(4);
 		vao.bind();
 		vao.storeData(Shapes.SQUARE_INDICES, Shapes.SQUARE_POS, Shapes.SQUARE_TEXTURE_COORDS);
@@ -42,11 +41,13 @@ public class CDDGame {
 		Sprite cat = new Sprite(texModel, new Vector3f(0, 0, -1), new Vector2f(1), 0);
 		Sprite back = new Sprite(mapModel, new Vector3f(0, 0, -10), new Vector2f(10.90625f, 6.171875f), 0);
 		Character character = new Character(camera, cat, new Vector3f(0, 0, -1), new Vector2f(1), 0, 1);
-		Scene scene = new Scene(character);
+		
 		FinalRenderer renderer = new FinalRenderer(camera);
 		//renderer.backgroundRenderer.setBackground(back);
 		renderer.spriteRenderer.addSprite(cat);
 		renderer.spriteRenderer.addSprite(back);
+		Scene scene = new Scene(character, camera, renderer);
+		Window.scene = scene;
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		float delta;
 		while (!glfwWindowShouldClose(Window.WindowHandle)) {
@@ -62,7 +63,8 @@ public class CDDGame {
 				e.printStackTrace();
 			}
 			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-			renderer.render(camera);
+			GL11.glClearColor(Red, Green, Blue, Alpha);
+			scene.render();
 			GLFW.glfwPollEvents();
 			GLFW.glfwSwapBuffers(Window.WindowHandle);
 		}

@@ -29,6 +29,11 @@ public class FinalRenderer {
         backgroundRenderer = new BackgroundRenderer(camera);
     }
 
+    public void setProjection(Camera camera){
+        spriteRenderer.setProjection(camera);
+        backgroundRenderer.setProjection(camera);
+    }
+
     /**
      * 
      * Calls render on all renderers

@@ -45,6 +45,10 @@ public class SpriteRenderer {
      * @param camera - The camera to render from
      */
     public SpriteRenderer(Camera camera){
+        setProjection(camera);
+    }
+
+    public void setProjection(Camera camera){
         shader.start();
         shader.setProjection(camera.getOrthographic());
         shader.stop();

@@ -33,6 +33,10 @@ public class BackgroundRenderer {
      * @param camera
      */
     public BackgroundRenderer(Camera camera){
+        setProjection(camera);
+    }
+
+    public void setProjection(Camera camera){
         shader.start();
         shader.setProjection(camera.getOrthographic());
         shader.stop();

@@ -27,6 +27,7 @@ import org.lwjgl.glfw.GLFW;
 
 //import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
+import org.lwjgl.glfw.GLFWWindowSizeCallback;
 //import org.lwjgl.glfw.GLFWImage;
 //import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
@@ -34,7 +35,12 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLCapabilities;
 //import org.lwjgl.system.MemoryStack;
 
+import CDDPhysics.Scene;
+
 public class Window {
+
+    public static Scene scene;
+
     static int WindowWidth;
     static int WindowHeight;
 
@@ -112,6 +118,7 @@ public class Window {
         }
 
         // Mouse Stuff
+        glfwSetFramebufferSizeCallback(WindowHandle, ResizeListener::invoke);
         GLFW.glfwSetCursorPosCallback(WindowHandle, MouseListener::mousePosCallback);
         GLFW.glfwSetMouseButtonCallback(WindowHandle, MouseListener::mouseButtonCallback);
         GLFW.glfwSetScrollCallback(WindowHandle, MouseListener::mouseScrollCallback);
