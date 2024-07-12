@@ -18,14 +18,6 @@ public class Input {
         return KeyReturned;
     }
 
-    public static int Mouse(long WindowHandle, int MouseButton) {
-        glfwSetInputMode(WindowHandle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
-        int MouseReturned = glfwGetMouseButton(WindowHandle, MouseButton);
-        //glfwSetMouseButtonCallback(WindowHandle, null)
-
-        return 0;
-    }
-
     public static double GetMouseX(long WindowHandle) {
         glfwSetInputMode(WindowHandle, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
         DoubleBuffer getx = BufferUtils.createDoubleBuffer(1);
