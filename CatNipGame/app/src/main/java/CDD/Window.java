@@ -1,15 +1,38 @@
 package CDD;
 
+//import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_DISABLED;
+//import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_HIDDEN;
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.GL_COLOR_BUFFER_BIT;
+//import static org.lwjgl.opengl.GL11.GL_DEPTH;
+//import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
+//import static org.lwjgl.opengl.GL11.GL_DEPTH;
+//import static org.lwjgl.opengl.GL11.GL_DEPTH_BUFFER_BIT;
 import static org.lwjgl.opengl.GL11.glClear;
 import static org.lwjgl.opengl.GL11.glClearColor;
-
+//mport static org.lwjgl.opengl.GL11.glColor3d;
+//import static org.lwjgl.opengl.GL11.glGetString;
+//import static org.lwjgl.system.MemoryStack.stackPush;
 import static org.lwjgl.system.MemoryUtil.NULL;
+
+import org.lwjgl.glfw.GLFW;
+
+//import java.lang.management.ManagementFactory;
+//import java.lang.management.OperatingSystemMXBean;
+//import java.lang.management.ManagementFactory;
+//import java.nio.IntBuffer;
+//import java.util.Set;
+
+//import javax.management.monitor.Monitor;
+
+//import org.lwjgl.glfw.GLFW;
 import org.lwjgl.glfw.GLFWErrorCallback;
+//import org.lwjgl.glfw.GLFWImage;
+//import org.lwjgl.glfw.GLFWVidMode;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GLCapabilities;
+//import org.lwjgl.system.MemoryStack;
 
 public class Window {
     static int WindowWidth;
@@ -28,7 +51,7 @@ public class Window {
     public static float NAlpha;
 
 
-    public void Create() { // Initialize The Window
+    public long Create() { // Initialize The Window
         // Error Callback
         GLFWErrorCallback.createPrint(System.err).set();
 
@@ -49,8 +72,7 @@ public class Window {
             Resizable = true;
             glfwWindowHint(GLFW_MAXIMIZED, GLFW_TRUE);
             glfwWindowHint(GLFW_DECORATED, GLFW_TRUE);
-        } else if(Type.toLowerCase() == "defult") {
-
+        } else if(Type.toLowerCase() == "default") {
             WindowWidth = 300;
             WindowHeight = 500;
 
@@ -89,6 +111,11 @@ public class Window {
             throw new IllegalStateException("Failed To Create GLFW Window");
         }
 
+        // Mouse Stuff
+        GLFW.glfwSetCursorPosCallback(WindowHandle, MouseListener::mousePosCallback);
+        GLFW.glfwSetMouseButtonCallback(WindowHandle, MouseListener::mouseButtonCallback);
+        GLFW.glfwSetScrollCallback(WindowHandle, MouseListener::mouseScrollCallback);
+
         // Make OpenGL the context current
         glfwMakeContextCurrent(WindowHandle);
         // Enable v-sync
@@ -106,7 +133,8 @@ public class Window {
         // TLDR: Everything Will Break Without The Next Line
         GL.createCapabilities();
 
-        Update(10); // Starts the window off for 10 milliseconds
+        Update(10);
+        return WindowHandle; // Returns the windows memory address
     }
 
     public static void Size(int Width, int Height) {
@@ -131,13 +159,6 @@ public class Window {
     static long LastTime;
 
     public static void Update(int TimeToRun) { // This function loops the window buffer & renders new frames
-
-        /* New Things to add:
-         - Title changine
-         - Frame limiter
-        */
-
-
         long loopstart = Time.CurrentMilliTime();
         while (!glfwWindowShouldClose(WindowHandle)) {
             // Poll events (Key/mouse events)
