@@ -26,27 +26,27 @@ public class Texture {
     private int type;
     private int unit = 0;
 
-    public Texture(GameFile file, int unit, boolean calibrate){
-        this(file, DEFAULT_TYPE, unit, calibrate);
+    public Texture(GameFile file, int unit, boolean calibrate, boolean pixelArt){
+        this(file, DEFAULT_TYPE, unit, calibrate, pixelArt);
     }
 
-    public Texture(GameFile file, int type, int unit, boolean calibrate){
-        this(file, new Vector2f(1), type, unit, calibrate);
+    public Texture(GameFile file, int type, int unit, boolean calibrate, boolean pixelArt){
+        this(file, new Vector2f(1), type, unit, calibrate, pixelArt);
     }
 
-    public Texture(GameFile file, Vector2f scale, int type, int unit, boolean calibrate){
-        this(file, -1, scale, type, unit, calibrate);
+    public Texture(GameFile file, Vector2f scale, int type, int unit, boolean calibrate, boolean pixelArt){
+        this(file, -1, scale, type, unit, calibrate, pixelArt);
         create();
     }
 
-    public Texture(GameFile file, int id, Vector2f scale, int type, int unit, boolean calibrate){
+    public Texture(GameFile file, int id, Vector2f scale, int type, int unit, boolean calibrate, boolean pixelArt){
         this.id = id;
         this.file = file;
         this.scale.set(scale);
         this.type = type;
         this.unit = unit;
         if(calibrate){
-            Texture.calibrate(type, USE_MIPMAP);
+            Texture.calibrate(type, USE_MIPMAP, pixelArt);
         }
         TEXTURES.add(this);
     }
@@ -103,20 +103,20 @@ public class Texture {
         this.scale.set(scale);
     }
 
-    public static void calibrate(int type, boolean useMipmap){
+    public static void calibrate(int type, boolean useMipmap, boolean pixelArt){
         GL11.glTexParameteri(type, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
         GL11.glTexParameteri(type, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
         if(useMipmap){
             GL30.glGenerateMipmap(type);
-            GL11.glTexParameteri(type, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR_MIPMAP_LINEAR);
+            GL11.glTexParameteri(type, GL11.GL_TEXTURE_MIN_FILTER, pixelArt ? GL11.GL_NEAREST_MIPMAP_NEAREST : GL11.GL_LINEAR_MIPMAP_LINEAR);
             GL11.glTexParameterf(type, GL15.GL_TEXTURE_LOD_BIAS, LOD_BIAS);
         }else{
-            GL11.glTexParameteri(type, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+            GL11.glTexParameteri(type, GL11.GL_TEXTURE_MIN_FILTER, pixelArt ? GL11.GL_NEAREST : GL11.GL_LINEAR);
         }
-        GL11.glTexParameteri(type, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+        GL11.glTexParameteri(type, GL11.GL_TEXTURE_MAG_FILTER, pixelArt ? GL11.GL_NEAREST : GL11.GL_LINEAR);
     }
     
-    public static Texture loadFromSTBI(GameFile file, int size){
+    public static Texture loadFromSTBI(GameFile file, boolean pixelArt, int size){
         int[] x = new int[1];
         int[] y = new int[1];
         int[] component = new int[1];
@@ -124,12 +124,12 @@ public class Texture {
         if(image == null){
             throw new RuntimeException("Could not load Image from " + file.getPath() + " " + STBImage.stbi_failure_reason() + "\n");
         }
-        Texture texture = new Texture(file, 0, USE_MIPMAP);
+        Texture texture = new Texture(file, 0, false, false);
         GL11.glBindTexture(texture.type, texture.id);
         int width = x[0];
         int height = y[0];
         GL13.glTexImage2D(texture.type, 0, GL13.GL_RGBA8, width, height, 0, GL13.GL_RGBA, GL11.GL_UNSIGNED_BYTE, image);
-        calibrate(texture.type, USE_MIPMAP);
+        calibrate(texture.type, USE_MIPMAP, pixelArt);
         return texture;
     }
 

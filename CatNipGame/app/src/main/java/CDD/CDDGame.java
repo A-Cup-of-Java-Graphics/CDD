@@ -36,8 +36,8 @@ public class CDDGame {
 		vao.bind();
 		vao.storeData(Shapes.SQUARE_INDICES, Shapes.SQUARE_POS, Shapes.SQUARE_TEXTURE_COORDS);
 		Model model = new Model(vao);
-		TexturedModel texModel = new TexturedModel(model, Texture.loadFromSTBI(new GameFile("CDD/textures/addict.png"), 1024));
-		TexturedModel mapModel = new TexturedModel(model, Texture.loadFromSTBI(new GameFile("CDD/textures/map1.jpg"), 1024));
+		TexturedModel texModel = new TexturedModel(model, Texture.loadFromSTBI(new GameFile("CDD/textures/extremeCat.png"), true, 1024));
+		TexturedModel mapModel = new TexturedModel(model, Texture.loadFromSTBI(new GameFile("CDD/textures/map1.jpg"), false, 1024));
 		Sprite cat = new Sprite(texModel, new Vector3f(0, 0, -1), new Vector2f(1), 0);
 		Sprite back = new Sprite(mapModel, new Vector3f(0, 0, -10), new Vector2f(10.90625f, 6.171875f), 0);
 		Character character = new Character(camera, cat, new Vector3f(0, 0, -1), new Vector2f(1), 0, 1);
