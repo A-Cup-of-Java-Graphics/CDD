@@ -34,7 +34,7 @@ public class GripPipeline {
 	private Mat rgbThreshold0Output = new Mat();
 	private Mat rgbThreshold1Output = new Mat();
 	private Mat rgbThreshold2Output = new Mat();
-	private ArrayList<MatOfPoint> findContours0Output = new ArrayList<MatOfPoint>();
+	public static ArrayList<MatOfPoint> findContours0Output = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> findContours1Output = new ArrayList<MatOfPoint>();
 	private ArrayList<MatOfPoint> findContours2Output = new ArrayList<MatOfPoint>();
 
