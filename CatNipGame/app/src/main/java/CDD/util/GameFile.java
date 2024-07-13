@@ -39,6 +39,10 @@ public class GameFile {
         return path;
     }
 
+    public String getAbsolutePath(){
+        return getAsFile().getAbsolutePath();
+    }
+
     public List<String> getData(){
         return data;
     }
@@ -47,9 +51,13 @@ public class GameFile {
         return ClassLoader.getSystemClassLoader().getResourceAsStream(path);
     }
 
+    public File getAsFile(){
+        return new File(ClassLoader.getSystemClassLoader().getResource(path).getPath());
+    }
+
     public OutputStream getOutputStream(){
         try{
-            return new FileOutputStream(new File(ClassLoader.getSystemClassLoader().getResource(path).getPath()));
+            return new FileOutputStream(getAsFile());
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -64,7 +72,7 @@ public class GameFile {
 
     public ByteBuffer getByteBuffer(int size){
         InputStream is = getStream();
-        ByteBuffer buffer = ByteBuffer.allocate(size);
+        ByteBuffer buffer = ByteBuffer.allocateDirect(size);
         int data = -1;
         try{
             while((data = is.read()) != -1){

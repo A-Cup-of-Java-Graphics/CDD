@@ -101,9 +101,9 @@ public class Window {
         //3.3 is the most modern version, 3.2 is the minimum version for macOS
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
 		glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
-		glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
+		//glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL11.GL_TRUE);
         //allows the use of core versions in shader files
-		glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+		//glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         
         //glfwSetWindowIcon(Window, Icon);
         // Create Window
@@ -142,6 +142,13 @@ public class Window {
 
         Update(10);
         return WindowHandle; // Returns the windows memory address
+    }
+
+    public static int[] getFrameBufferDimensions(){
+        int[] x = new int[1];
+        int[] y = new int[1];
+        glfwGetFramebufferSize(WindowHandle, x, y);
+        return new int[]{x[0], y[0]};
     }
 
     public static void Size(int Width, int Height) {

@@ -1,29 +1,40 @@
 package CDD.CollisionMap;
 
-import java.awt.*;
+import java.awt.Polygon;
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+
+import org.opencv.core.MatOfPoint;
+import org.opencv.core.Point;
+import org.opencv.utils.Converters;
 
 public class PolygonBuilder {
-    public static void CoordToPolygon(double[] xpoly, double[] ypoly) {
-        // Collision Map Array's That Polygon Will Read
-        int[] XPolyAsInt = {GripPipeline.findContours0Output};
-        int[] YPolyAsInt = {};
+    public static Set<Polygon> CoordToPolygon(List<MatOfPoint> contours, int multiplier) {
+        Set<Polygon> red = new HashSet<>();
 
-        // Convert The X Array
-        for (double Point : xpoly) {
-            int NewXPoly = (int) Point;
-            XPolyAsInt[NewXPoly] = XPolyAsInt[NewXPoly];
-        }
-        
-        // Convert The Y Array
-        for (double Point : xpoly) {
-            float YDoubleAsFloat = Math.round(Point);
-            int NewYPoly = (int) YDoubleAsFloat;
-            YPolyAsInt[NewYPoly] = YPolyAsInt[NewYPoly];
-        }
-        
-        // Print The Data *This Will Be Changed To Returning The Data Instead Of Printing It On The Release Version*
-        Polygon poli = new Polygon(XPolyAsInt, YPolyAsInt, XPolyAsInt.length);
-        System.out.println("Poli Data: " + poli);
+        //GripPipeline pipeline = new GripPipeline();
+        //pipeline.process("src/main/java/org/game/map.png");
 
+        for (MatOfPoint mat : contours) {
+            List<Point> points = new ArrayList<>();
+            Converters.Mat_to_vector_Point(mat, points);
+
+            List<Integer> x = new LinkedList<>();
+            List<Integer> y = new LinkedList<>();
+
+            points.forEach(point -> {
+                x.add((int) (point.x * multiplier));
+                y.add((int) (point.y * multiplier));
+            });
+
+            int[] arrX = x.stream().mapToInt(Integer::intValue).toArray();
+            int[] arrY = y.stream().mapToInt(Integer::intValue).toArray();
+
+            red.add(new Polygon(arrX, arrY, arrX.length));
+        }
+        return red;
     }
 }

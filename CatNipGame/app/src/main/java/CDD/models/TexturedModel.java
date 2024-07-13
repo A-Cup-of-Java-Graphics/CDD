@@ -6,7 +6,7 @@ public class TexturedModel extends Model {
     private Texture texture;
 
     public TexturedModel(Model model, Texture texture){
-        super(model.getVao());
+        super(model.getVao(), model.getDrawMode(), model.isUsingElements());
         this.texture = texture;
     }
 

@@ -8,13 +8,25 @@ import CDD.components.Vao;
 public class Model {
 
     private Vao vao;
+    private int drawMode;
+    private boolean useElements;
 
-    public Model(Vao vao){
+    public Model(Vao vao, int drawMode, boolean useElements){
         this.vao = vao;
+        this.drawMode = drawMode;
+        this.useElements = useElements;
     }
 
     public Vao getVao(){
         return vao;
+    }
+
+    public int getDrawMode(){
+        return drawMode;
+    }
+
+    public boolean isUsingElements(){
+        return useElements;
     }
 
     public void bind(){
@@ -30,7 +42,10 @@ public class Model {
     }
 
     public void render(){
-        GL15.glDrawElements(GL11.GL_TRIANGLES, vao.getIndexCount(), GL11.GL_UNSIGNED_INT, 0);
+        if(useElements)
+            GL15.glDrawElements(drawMode, vao.getIndexCount(), GL11.GL_UNSIGNED_INT, 0);
+        else
+            GL15.glDrawArrays(drawMode, 0, vao.getVertexCount());
     }
     
 }

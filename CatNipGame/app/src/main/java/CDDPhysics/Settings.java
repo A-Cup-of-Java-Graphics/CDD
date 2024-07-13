@@ -13,10 +13,10 @@ public class Settings {
     private Scene scene;
 
     public Settings(Scene scene){
-        setKeyInteraction(EnumKeys.MOVE_FORWARD, (sc) -> {sc.getCharacter().move(0, 0.1f);});
-        setKeyInteraction(EnumKeys.MOVE_BACKWARD, (sc) -> {sc.getCharacter().move(0, -0.1f);});
-        setKeyInteraction(EnumKeys.MOVE_LEFT, (sc) -> {sc.getCharacter().move(-0.1f, 0);});
-        setKeyInteraction(EnumKeys.MOVE_RIGHT, (sc) -> {sc.getCharacter().move(0.1f, 0);});
+        setKeyInteraction(EnumKeys.MOVE_FORWARD, (sc) -> {sc.getCharacter().move(0, 10f);});
+        setKeyInteraction(EnumKeys.MOVE_BACKWARD, (sc) -> {sc.getCharacter().move(0, -10f);});
+        setKeyInteraction(EnumKeys.MOVE_LEFT, (sc) -> {sc.getCharacter().move(-10f, 0);});
+        setKeyInteraction(EnumKeys.MOVE_RIGHT, (sc) -> {sc.getCharacter().move(10f, 0);});
         setKeyFor(EnumKeys.MOVE_FORWARD, GLFW.GLFW_KEY_W);
         setKeyFor(EnumKeys.MOVE_LEFT, GLFW.GLFW_KEY_A);
         setKeyFor(EnumKeys.MOVE_BACKWARD, GLFW.GLFW_KEY_S);

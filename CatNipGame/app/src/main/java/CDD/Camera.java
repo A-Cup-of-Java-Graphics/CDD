@@ -8,9 +8,11 @@ public class Camera{
 
     public Vector3f position = new Vector3f();
     public Matrix4f orthographic = new Matrix4f();
+    private float fov = 1;
   
-    public Camera(Vector3f position){
+    public Camera(Vector3f position, float fov){
         this.position = position;
+        this.fov = fov;
     }
 
     public Vector3f getPosition(){
@@ -19,6 +21,14 @@ public class Camera{
 
     public void setPosition(Vector3f position){
         this.position.set(position);
+    }
+
+    public float getFov(){
+        return fov;
+    }
+
+    public void setFov(float fov){
+        this.fov = fov;
     }
 
     //view matrix
@@ -42,11 +52,16 @@ public class Camera{
     }
 
     public void calculateOrthographic(float zNear, float zFar){
+        int[] dimension = Window.getFrameBufferDimensions();
+        calculateOrthographic(dimension[0], dimension[1], zNear, zFar);
+    }
+
+    public void calculateOrthographic(float width, float height, float zNear, float zFar){
         if(Window.WindowHandle == MemoryUtil.NULL){
             throw new UnsupportedOperationException("Window has not been created yet, please use this method only after the window has been created");
         }
-		float aspectRatio = (float) Window.WindowWidth / (float) Window.WindowHeight;
-        setOrthographic(-aspectRatio, aspectRatio, 1, -1, zNear, zFar);
+		float aspectRatio = (float) width / (float) height;
+        setOrthographic(-aspectRatio * fov, aspectRatio * fov, fov, -fov, zNear, zFar);
     }
 
     public void setOrthographic(float left, float right, float top, float bottom, float zNear, float zFar){

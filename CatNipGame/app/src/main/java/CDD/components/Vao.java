@@ -226,6 +226,10 @@ public class Vao {
         return indexCount;
     }
 
+    public int getVertexCount(){
+        return vertexCount;
+    }
+
     /**
      * 
      * Finds all the strides for every data array

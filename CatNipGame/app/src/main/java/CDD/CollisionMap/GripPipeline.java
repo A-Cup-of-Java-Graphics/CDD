@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.HashMap;
 
+import org.joml.Vector3f;
 import org.opencv.core.*;
 import org.opencv.core.Core.*;
 import org.opencv.features2d.FastFeatureDetector;
@@ -16,6 +17,8 @@ import org.opencv.imgcodecs.Imgcodecs;
 import org.opencv.imgproc.*;
 import org.opencv.objdetect.*;
 import org.opencv.utils.Converters;
+
+import CDD.util.GameFile;
 
 /**
 * GripPipeline class.
@@ -27,7 +30,7 @@ import org.opencv.utils.Converters;
 public class GripPipeline {
 	public static void main(String[] args) {
 		GripPipeline pipeline = new GripPipeline();
-        pipeline.process("CatNipGame\\app\\src\\main\\resources\\CDD\\textures\\map.png");
+        pipeline.process(new GameFile("CDD/textures/map.png").getAbsolutePath());
 	}
 
 	//Outputs
@@ -42,7 +45,7 @@ public class GripPipeline {
 		nu.pattern.OpenCV.loadLocally();
 	}
 
-  public Mat loadMap(String path) {
+  public static Mat loadMap(String path) {
     Mat image = Imgcodecs.imread(path);
 
     // Check if the image was loaded successfully
@@ -58,8 +61,14 @@ public class GripPipeline {
 	/**
 	 * This is the primary method that runs the entire pipeline and updates the outputs.
 	 */
+
+	public static List<MatOfPoint> findContoursForColor(Mat source, ColorThreshold threshold, boolean externalOnly){
+		Mat output = rgbThreshold(source, threshold.getR(), threshold.getG(), threshold.getB(), new Mat());
+		return findContours(output, externalOnly);
+	}
+
 	public void process(String path) {
-    Mat source0 = loadMap(path);
+    	Mat source0 = loadMap(path);
 
 		// Step RGB_Threshold0:
 		Mat rgbThreshold0Input = source0;
@@ -188,6 +197,10 @@ System.out.println("==============================================\n Game Trigge
 	}
 
 
+	private static Mat rgbThreshold(Mat input, double[] red, double[] green, double[] blue){
+		return rgbThreshold(input, red, green, blue, input);
+	}
+
 	/**
 	 * Segment an image based on color ranges.
 	 * @param input The image on which to perform the RGB threshold.
@@ -196,11 +209,16 @@ System.out.println("==============================================\n Game Trigge
 	 * @param blue The min and max blue.
 	 * @param output The image in which to store the output.
 	 */
-	private void rgbThreshold(Mat input, double[] red, double[] green, double[] blue,
+	private static Mat rgbThreshold(Mat input, double[] red, double[] green, double[] blue,
 		Mat out) {
 		Imgproc.cvtColor(input, out, Imgproc.COLOR_BGR2RGB);
 		Core.inRange(out, new Scalar(red[0], green[0], blue[0]),
 			new Scalar(red[1], green[1], blue[1]), out);
+		return out;
+	}
+
+	private static List<MatOfPoint> findContours(Mat input, boolean externalOnly){
+		return findContours(input, externalOnly, new ArrayList<MatOfPoint>());
 	}
 
 	/**
@@ -210,7 +228,7 @@ System.out.println("==============================================\n Game Trigge
 	 * @param maskSize the size of the mask.
 	 * @param output The image in which to store the output.
 	 */
-	private void findContours(Mat input, boolean externalOnly,
+	private static List<MatOfPoint> findContours(Mat input, boolean externalOnly,
 		List<MatOfPoint> contours) {
 		Mat hierarchy = new Mat();
 		contours.clear();
@@ -223,6 +241,7 @@ System.out.println("==============================================\n Game Trigge
 		}
 		int method = Imgproc.CHAIN_APPROX_SIMPLE;
 		Imgproc.findContours(input, contours, hierarchy, mode, method);
+		return contours;
 	}
 
 
