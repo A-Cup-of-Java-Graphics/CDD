@@ -6,14 +6,18 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.opencv.core.MatOfPoint;
 import org.opencv.core.Point;
 import org.opencv.utils.Converters;
 
+import org.joml.Vector2f;
+
 public class PolygonBuilder {
-    public static Set<Polygon> CoordToPolygon(List<MatOfPoint> contours, int multiplier) {
-        Set<Polygon> red = new HashSet<>();
+    public static Map<Polygon, Vector2f> CoordToPolygon(List<MatOfPoint> contours, int multiplier, int width, int height) {
+        Map<Polygon, Vector2f> red = new HashMap<Polygon, Vector2f>();
 
         //GripPipeline pipeline = new GripPipeline();
         //pipeline.process("src/main/java/org/game/map.png");
@@ -25,15 +29,31 @@ public class PolygonBuilder {
             List<Integer> x = new LinkedList<>();
             List<Integer> y = new LinkedList<>();
 
-            points.forEach(point -> {
-                x.add((int) (point.x * multiplier));
-                y.add((int) (point.y * multiplier));
-            });
+            int xCenter = 0, yCenter = 0;
+
+            for(Point point : points){
+                int xPoint = (int) (point.x * multiplier);
+                int yPoint = (int) (-point.y * multiplier);
+                xCenter += xPoint;
+                yCenter += yPoint;
+            }
+
+            xCenter /= points.size();
+            yCenter /= points.size();
+
+            for(Point point : points){
+                int xPoint = (int) (point.x * multiplier) - xCenter;
+                int yPoint = (int) (-point.y * multiplier) - yCenter;
+                x.add(xPoint);
+                y.add(yPoint);
+            }
+            xCenter -= width / 2;
+            yCenter += height / 2;
 
             int[] arrX = x.stream().mapToInt(Integer::intValue).toArray();
             int[] arrY = y.stream().mapToInt(Integer::intValue).toArray();
 
-            red.add(new Polygon(arrX, arrY, arrX.length));
+            red.put(new Polygon(arrX, arrY, arrX.length), new Vector2f(xCenter, yCenter));
         }
         return red;
     }

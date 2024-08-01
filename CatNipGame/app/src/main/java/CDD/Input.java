@@ -1,10 +1,19 @@
 package CDD;
+import java.awt.Polygon;
+import java.awt.geom.Line2D;
+import java.awt.geom.Line2D.Double;
 import java.nio.DoubleBuffer;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.lwjgl.BufferUtils;
+import org.lwjgl.glfw.GLFW;
 
+import CDD.CollisionMap.CollisionMap;
+import CDD.CollisionMap.EnumMarkerColorThresholds;
 import CDDPhysics.EnumKeys;
 import CDDPhysics.Scene;
+import CDDPhysics.Character;
 
 import static org.lwjgl.glfw.GLFW.*;
 
@@ -69,6 +78,9 @@ public class Input {
             scene.getSettings().hitKey(EnumKeys.MOVE_LEFT).accept(scene);
         }else if(KeyPressed(window, scene.getSettings().getKeyFor(EnumKeys.MOVE_RIGHT))){
             scene.getSettings().hitKey(EnumKeys.MOVE_RIGHT).accept(scene);
+        }
+        if(KeyPressed(window, GLFW.GLFW_KEY_TAB)){
+            CDDGame.TRIGGER = !CDDGame.TRIGGER;
         }
     }
 }

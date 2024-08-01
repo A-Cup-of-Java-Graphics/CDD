@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.HashMap;
 
+import org.joml.Vector2i;
 import org.joml.Vector3f;
 import org.opencv.core.*;
 import org.opencv.core.Core.*;
@@ -56,6 +57,10 @@ public class GripPipeline {
         System.out.println("Image loaded successfully!");
     }
     return image;
+  }
+
+  public static Vector2i findImageDimensions(Mat source){
+	return new Vector2i(source.cols(), source.rows());
   }
 
 	/**
