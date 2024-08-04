@@ -1,8 +1,11 @@
 package CDDPhysics.collision;
 
-import java.awt.Polygon;
-import java.awt.geom.Rectangle2D;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.joml.Matrix2f;
 import org.joml.Vector2f;
@@ -11,9 +14,9 @@ import CDDPhysics.GameObject;
 
 public abstract class Collider {
 
-    protected Edge[] edges;
-    protected Vector2f[] normals;
-    protected Vector2f[] vertices;
+    protected Map<Edge, Vector2f> sides;
+    protected List<Vector2f> axis;
+    protected List<Vector2f> vertices;
     protected Vector2f position;
     protected Vector2f bounds;
     protected Vector2f scale = new Vector2f(1);
@@ -33,7 +36,7 @@ public abstract class Collider {
     public void rotate(float rotation){
         this.rotation += rotation;
         Matrix2f rotationMat = new Matrix2f().rotate(rotation);
-        for(Vector2f normal : normals){
+        for(Vector2f normal : sides.values()){
             normal.mul(rotationMat);
         }
         for(Vector2f vertex : vertices){
@@ -54,9 +57,28 @@ public abstract class Collider {
         }
     }
 
-    protected abstract Vector2f[] calculateVertices();
-    protected abstract Edge[] calculateEdges();
-    protected abstract Vector2f[] calculateNormals();
+    protected abstract List<Vector2f> calculateVertices();
+    protected abstract Map<Edge, Vector2f> calculateSides();
+    protected List<Vector2f> calculateAxis(){
+        List<Vector2f> rAxis = new ArrayList<Vector2f>();
+        Collection<Edge> edges = getEdges();
+        Set<Edge> falsified = new HashSet<Edge>();
+        Set<Edge> checked = new HashSet<Edge>();
+        for(Edge edge : edges){
+            if(falsified.contains(edge)) continue;
+            Vector2f axis = sides.get(edge);
+            for(Edge other : edges){
+                if(other.equals(edge) || falsified.contains(other) || checked.contains(other)) continue;
+                Vector2f otherAxis = sides.get(other);
+                if(otherAxis.x * axis.y + otherAxis.y * axis.x == 0){
+                    falsified.add(other);
+                }
+            }
+            checked.add(edge);
+            rAxis.add(axis);
+        }
+        return rAxis;
+    }
 
     public abstract boolean contains(Vector2f point);
     public abstract boolean contains(Edge edge);
@@ -66,12 +88,20 @@ public abstract class Collider {
         return position;
     }
 
-    public Edge[] getEdges(){
-        return edges;
+    public Map<Edge, Vector2f> getSides(){
+        return sides;
     }
 
-    public Vector2f[] getNormals(){
-        return normals;
+    public Collection<Edge> getEdges(){
+        return sides.keySet();
+    }
+
+    public Collection<Vector2f> getNormals(){
+        return sides.values();
+    }
+
+    public Collection<Vector2f> getAxis(){
+        return axis;
     }
 
     public GameObject getHost(){

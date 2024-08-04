@@ -2,9 +2,10 @@ package CDD;
 
 import java.awt.Polygon;
 
-import org.joml.Vector2f;
-
 import CDD.components.Vao;
+import CDD.models.Model;
+import CDD.models.TexturedModel;
+import CDD.texture.Texture;
 import CDDPhysics.collision.Edge;
 
 public class Shapes {
@@ -39,15 +40,23 @@ public class Shapes {
 			}
             Vao vao = new Vao(polygon.npoints);
             vao.bind();
-            vao.storeData(new int[0], points, textureCoords);
+            vao.storeDataArrays(points, textureCoords);
             return vao;
     }
 
     public static Vao line(Edge edge){
         Vao vao = new Vao(2);
         vao.bind();
-        vao.storeData(new int[2], new float[]{edge.getOrigin().x, edge.getOrigin().y, 0, edge.getEnd().x, edge.getEnd().y, 0}, new float[]{1, 1, 1, 1});
+        vao.storeDataArrays(new float[]{edge.getOrigin().x, edge.getOrigin().y, 0, edge.getEnd().x, edge.getEnd().y, 0}, new float[]{1, 1, 1, 1});
         return vao;
+    }
+
+    public static Model model(Vao vao, int drawMode){
+        return new Model(vao, drawMode, vao.getEbo() != null);
+    }
+
+    public static TexturedModel texturedModel(Model model, Texture texture){
+        return new TexturedModel(model, texture);
     }
     
 }

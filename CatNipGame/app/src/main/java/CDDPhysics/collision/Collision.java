@@ -35,13 +35,13 @@ public class Collision {
         Map<Collider, Set<Edge>> edges = new HashMap<Collider, Set<Edge>>();
         edges.put(left, new HashSet<Edge>());
         edges.put(right, new HashSet<Edge>());
-        for(Edge edge : left.edges){
+        for(Edge edge : left.getEdges()){
             if(right.intersects(edge)){
                 System.out.println("PROOF");
                 edges.get(left).add(edge);
             }
         }
-        for(Edge edge : right.edges){
+        for(Edge edge : right.getEdges()){
             if(left.intersects(edge)){
                 System.out.println("PROVEN");
                 edges.get(right).add(edge);
@@ -54,20 +54,19 @@ public class Collision {
         Map<Collider, Vector2f> forces = new HashMap<Collider, Vector2f>();
         forces.put(left, new Vector2f());
         forces.put(right, new Vector2f());
-        List<Edge> leftEdges = Arrays.asList(left.edges);
-        List<Edge> rightEdges = Arrays.asList(right.edges);
         float overlap = 0;
         Vector2f[] normalPair = new Vector2f[2];
         Edge[] edgePair = new Edge[2];
         for(Edge leftEdge : edges.get(left)){
-            Vector2f normal = left.normals[leftEdges.indexOf(leftEdge)];
+            Vector2f normal = left.getSides().get(leftEdge);
             for(Edge rightEdge : edges.get(right)){
                 Vector2f ovl = leftEdge.overlap(rightEdge);
                 float ovlap = Math.max(ovl.x, ovl.y);
                 if(ovlap > overlap){
+                    System.out.println(leftEdge + " " + ovlap);
                     overlap = ovlap;
                     normalPair[0] = normal;
-                    normalPair[1] = right.normals[rightEdges.indexOf(rightEdge)];
+                    normalPair[1] = right.getSides().get(rightEdge);
                     edgePair[0] = leftEdge;
                     edgePair[1] = rightEdge;
                 }
@@ -76,20 +75,29 @@ public class Collision {
         System.out.println("KORQ " + edges.get(left).size() + " " + edges.get(right).size());
         Vector2f distance = edgePair[0].distance(edgePair[1].getOrigin());
         Vector2f interspace = edgePair[0].distance(edgePair[1].getEnd());
-        Vector2f movement = (distance.dot(normalPair[0]) > 0 ? distance : interspace);
+        Vector2f movement = (distance.dot(normalPair[0]) > 0 ? interspace : distance).absolute();
+        movement = new Vector2f((float) Math.max(movement.x, 5), (float) Math.max(movement.y, 5));
+        //movement.add(13, 13);
         Vector2f vec = normalPair[1].mul(movement, new Vector2f());
         //vec = new Vector2f((float) Math.max(vec.x, 10), (float) Math.max(vec.y, 10));
-        System.out.println("NORM " + normalPair[1] + " " + edgePair[0] + " " + edgePair[1] + " " + distance + " " + interspace);
-        forces.put(left, normalPair[1].mul(10, new Vector2f()));
+        System.out.println("NORM " + movement + " " + normalPair[1] + " " + edgePair[0] + " " + edgePair[1] + " " + distance + " " + interspace);
+        forces.put(left, vec);//normalPair[1].mul(vec, new Vector2f()));
         forces.put(right, normalPair[0].mul(10, new Vector2f()));
         return forces;
     }
 
     public void ennactCollisionForce(){
-        while(isColliding()){
+        int i = 0;
+        int numAxis = left.getAxis().size() + right.getAxis().size();
+        while(i < numAxis && isColliding()){
+            System.out.println(numAxis);
+            i++;
             System.out.println("ISCOL");
             forces = forces();
-            System.out.println(forces.get(left));
+            System.out.println("FORCE" + forces.get(left));
+            if(forces.get(left).equals(0, 0) || forces.get(right).equals(0, 0)){
+                break;
+            }
             if(left.host != null && left.host.canMove()){
                 left.host.move(forces.get(left));
             }

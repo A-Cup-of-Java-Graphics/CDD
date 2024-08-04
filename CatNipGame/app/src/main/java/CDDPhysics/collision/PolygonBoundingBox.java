@@ -1,11 +1,12 @@
 package CDDPhysics.collision;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Vector;
 import java.awt.Polygon;
-import java.awt.geom.Area;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.plaf.synth.SynthDesktopIconUI;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -21,29 +22,42 @@ public class PolygonBoundingBox extends Collider {
         this.shape = shape;
         this.host = host;
         this.vertices = calculateVertices();
-        this.edges = calculateEdges();
-        this.normals = calculateNormals();
+        this.sides = calculateSides();
+        this.axis = calculateAxis();
         this.bounds = new Vector2f((float) shape.getBounds2D().getMaxX() - position.x, (float) shape.getBounds2D().getMaxY() - position.y);
     }
 
-    protected Vector2f[] calculateVertices(){
-        Vector2f[] vertices = new Vector2f[shape.npoints];
+    @Override
+    protected List<Vector2f> calculateVertices(){
+        List<Vector2f> vertices = new ArrayList<Vector2f>();
         for(int i = 0; i < shape.npoints; i++){
             System.out.println(position);
-            vertices[i] = new Vector2f(shape.xpoints[i], shape.ypoints[i]).add(position);
+            vertices.add(new Vector2f(shape.xpoints[i], shape.ypoints[i]).add(position));
         }
         return vertices;
     }
 
-    protected Edge[] calculateEdges(){
-        Edge[] edges = new Edge[shape.npoints];
-        for(int i = 0; i < vertices.length ; i++){
-            Vector2f end = i == vertices.length - 1 ? vertices[0] : vertices[i + 1];
-            edges[i] = new Edge(vertices[i], end);
+    @Override
+    protected Map<Edge, Vector2f> calculateSides(){
+        Map<Edge, Vector2f> sides = new HashMap<Edge, Vector2f>();
+        int sum = 0;
+        for(int i = 0; i < vertices.size() ; i++){
+            Vector2f vertex = vertices.get(i);
+            Vector2f end = i == vertices.size() - 1 ? vertices.getFirst() : vertices.get(i + 1);
+            Edge edge = new Edge(vertex, end);
+            sum += (end.x - vertex.x) * (end.y + vertex.y);
+            Vector2f normal = edge.getDirection().normalize().perpendicular();
+            sides.put(edge, normal);
         }
-        return edges;
+        if(sum > 0){
+            for(Vector2f normal : sides.values()){
+                normal.mul(-1f);
+            }
+        }
+        return sides;
     }
     
+    /*
     protected Vector2f[] calculateNormals(){
         Vector2f[] normals = new Vector2f[edges.length];
         int sum = 0;
@@ -59,10 +73,11 @@ public class PolygonBoundingBox extends Collider {
             normals[i] = new Vector2f(d.x * sign, d.y * sign).normalize();
         }
         return normals;
-    }
+    }*/
 
+    @Override
     public boolean intersects(Edge edge){
-        for(Edge e : edges){
+        for(Edge e : getEdges()){
             if(e.intersects(edge)){
                 System.out.println("POLY");
                 return true;
@@ -71,18 +86,15 @@ public class PolygonBoundingBox extends Collider {
         return contains(edge.getOrigin()) || contains(edge.getEnd());
     }
 
+    @Override
     public boolean contains(Vector2f point){
-        for(int i = 0; i < edges.length; i++){
-            Vector2f dist = edges[i].distance(point);
-            if(dist.dot(normals[i]) > 0){
-                return false;
-            }
-        }
-        return true;
+        Vector2f pointRelative = point.sub(position, new Vector2f());
+        return shape.contains(pointRelative.x, pointRelative.y);
     }
 
+    @Override
     public boolean contains(Edge edge){
-        for(Edge e : edges){
+        for(Edge e : getEdges()){
             if(e.intersects(edge)){
                 return false;
             }

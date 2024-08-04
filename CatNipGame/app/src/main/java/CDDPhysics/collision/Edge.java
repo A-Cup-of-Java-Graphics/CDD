@@ -1,13 +1,8 @@
 package CDDPhysics.collision;
 
-import java.awt.geom.Area;
 import java.awt.geom.Line2D;
-import java.util.Vector;
 
 import org.joml.Vector2f;
-import org.joml.Vector3f;
-
-import CDD.CDDGame;
 
 public class Edge {
 
@@ -51,17 +46,25 @@ public class Edge {
     public Vector2f overlap(Edge other){
         float originProjected = other.getDirection().dot(origin);
         float endProjected = other.getDirection().dot(end);
-        float overlap = other.overlap(originProjected, endProjected);
+        float min1 = Math.min(originProjected, endProjected);
+        System.out.println(other.getDirection());
+        System.out.println(other);
+        float overlap = other.overlap(min1, min1 == originProjected ? endProjected : originProjected);
         float otherOriginProjected = getDirection().dot(other.origin);
         float otherEndProjected = getDirection().dot(other.end);
-        float overlap2 = overlap(otherOriginProjected, otherEndProjected);
+        float min2 = Math.min(otherOriginProjected, otherEndProjected);
+        float overlap2 = overlap(min2, min2 == otherOriginProjected ? otherEndProjected : otherOriginProjected);
+        System.out.println(overlap + " -- " + overlap2);
+        System.out.println(getDirection());
         return new Vector2f(overlap, overlap2);
     }
 
     private float overlap(float min, float max){
-        float origin = getOrigin().length();
+        if(min == max) return 0;
+        float origin = getOrigin().dot(getDirection());
         float end = origin + length();
-        return Math.abs(Math.max(0, Math.min(end, max)) - Math.max(origin, min));
+        System.out.println(max + " " + min + " -> " + origin + " " + end);
+        return Math.abs(Math.min(end, max) - Math.max(origin, min));
     }
 
     public Vector2f nonOverlap(Edge other){

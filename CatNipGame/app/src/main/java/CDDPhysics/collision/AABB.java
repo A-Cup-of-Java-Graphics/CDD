@@ -1,10 +1,10 @@
 package CDDPhysics.collision;
 
-import java.awt.Polygon;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.joml.Vector2f;
 import org.joml.Vector3f;
@@ -18,29 +18,29 @@ public class AABB extends Collider {
         this.bounds = bounds;
         this.host = host;
         this.vertices = calculateVertices();
-        this.edges = calculateEdges();
-        this.normals = calculateNormals();
+        this.sides = calculateSides();
+        this.axis = calculateAxis();
     }
 
-    protected Vector2f[] calculateVertices(){
-        Vector2f[] vertices = new Vector2f[]{
+    protected List<Vector2f> calculateVertices(){
+        List<Vector2f> vertices = new ArrayList<Vector2f>(Arrays.asList(new Vector2f[]{
             new Vector2f(position.x - bounds.x, position.y + bounds.y), 
             position.add(bounds, new Vector2f()),
             new Vector2f(position.x + bounds.x, position.y - bounds.y), 
             position.sub(bounds, new Vector2f())
-        };
+        }));
         return vertices;
     }
 
-    protected Edge[] calculateEdges(){
-        Edge[] edges = new Edge[4];
-        edges[0] = new Edge(vertices[0], vertices[1]);
-        edges[1] = new Edge(vertices[1], vertices[2]);
-        edges[2] = new Edge(vertices[2], vertices[3]);
-        edges[3] = new Edge(vertices[3], vertices[0]);
-        return edges;
+    protected Map<Edge, Vector2f> calculateSides(){
+        Map<Edge, Vector2f> sides = new HashMap<Edge, Vector2f>();
+        sides.put(new Edge(vertices.get(0), vertices.get(1)), new Vector2f(0, 1));
+        sides.put(new Edge(vertices.get(1), vertices.get(2)), new Vector2f(1, 0));
+        sides.put(new Edge(vertices.get(2), vertices.get(3)), new Vector2f(0, -1));
+        sides.put(new Edge(vertices.get(3), vertices.get(0)), new Vector2f(-1, 0));
+        return sides;
     }
-
+    /*
     protected Vector2f[] calculateNormals(){
         Vector2f[] normals = new Vector2f[edges.length];
         for(int i = 0; i < edges.length; i ++){
@@ -50,10 +50,10 @@ public class AABB extends Collider {
             normals[i] = new Vector2f(d.x, d.y).normalize();
         }
         return normals;
-    }
+    }*/
 
     public boolean intersects(Edge edge){
-        for(Edge e : edges){
+        for(Edge e : getEdges()){
             if(e.intersects(edge)){
                 System.out.println("AABB");
                 return true;
@@ -63,8 +63,8 @@ public class AABB extends Collider {
     }
 
     public boolean contains(Vector2f point){
-        if(point.x > position.x - bounds.x && point.x < position.x + bounds.x){
-            if(point.y > position.y - bounds.y && point.y < position.y + bounds.y){
+        if(point.x >= position.x - bounds.x && point.x <= position.x + bounds.x){
+            if(point.y >= position.y - bounds.y && point.y <= position.y + bounds.y){
                 return true;
             }
         }

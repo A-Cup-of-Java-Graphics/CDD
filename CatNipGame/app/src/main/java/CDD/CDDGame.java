@@ -1,7 +1,5 @@
 package CDD;
 
-import static org.lwjgl.glfw.GLFW.*;
-
 import java.awt.Polygon;
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +8,7 @@ import java.util.Map;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 import org.lwjgl.glfw.GLFW;
+import static org.lwjgl.glfw.GLFW.glfwWindowShouldClose;
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
 
@@ -21,7 +20,6 @@ import CDD.models.TexturedModel;
 import CDD.render.FinalRenderer;
 import CDD.texture.Texture;
 import CDD.util.GameFile;
-import CDD.util.Tuple;
 import CDDPhysics.Character;
 import CDDPhysics.Scene;
 import CDDPhysics.collision.AABB;
@@ -44,7 +42,7 @@ public class CDDGame {
 		//Window.Update(300);
 		long LastMilliTime = Time.CurrentMilliTime();
 		//long LastKeyCheck = Time.CurrentMilliTime();
-		Camera camera = new Camera(new Vector3f(0, 0, 0), 500);
+		Camera camera = new Camera(new Vector3f(0, 0, 0), 250);
 		camera.calculateOrthographic(0.0001f, 1000);
 		Vao vao = new Vao(4);
 		vao.bind();
@@ -91,8 +89,7 @@ public class CDDGame {
 			pbbs.add(bb);
 		}
 		for(PolygonBoundingBox bb : pbbs){
-			for(int i = 0; i < bb.getEdges().length; i++){
-				Edge edge = bb.getEdges()[i];
+			for(Edge edge : bb.getEdges()){
 				Vao e = new Vao(2);
 				e.bind();
 				e.storeData(new int[2], new float[]{edge.getOrigin().x, edge.getOrigin().y, 0, edge.getEnd().x, edge.getEnd().y, 0}, new float[]{1, 1, 1, 1});
@@ -103,7 +100,7 @@ public class CDDGame {
 
 				Vao n = new Vao(2);
 				n.bind();
-				n.storeData(new int[1], new float[]{0, 0, 0, bb.getNormals()[i].x * 100, bb.getNormals()[i].y * 100, 0}, new float[]{1, 1, 1, 1});
+				n.storeData(new int[1], new float[]{0, 0, 0, bb.getSides().get(edge).x * 10, bb.getSides().get(edge).y * 10, 0}, new float[]{1, 1, 1, 1});
 				Model nm = new Model(n, GL11.GL_LINES, false);
 				TexturedModel tnm = new TexturedModel(nm, tex);
 				Vector2f center = edge.getCenter();
@@ -138,8 +135,10 @@ public class CDDGame {
 				delta = sync;
 				for(int i = 0; i < delta; i++) {
 					Input.handleInputs(Window.WindowHandle, scene);
-					for(int j = 0; j < chara.getEdges().length; j++){
-						sprs.get(j).setPosition(new Vector3f(chara.getEdges()[j].getOrigin(), -1f));
+					int j = 0;
+					for(Edge edge : chara.getEdges()){
+						sprs.get(j).setPosition(new Vector3f(edge.getOrigin(), -1f));
+						j++;
 					}
 					for(PolygonBoundingBox bb : pbbs){
 						Collision collision = new Collision(chara, bb);

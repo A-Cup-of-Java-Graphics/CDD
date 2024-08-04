@@ -246,6 +246,29 @@ public class Vao {
     }
 
     /**
+     * Stores the given data arrays into the VAO,
+     * essentially making the VAO a representation of the data inside these arrays.
+     * 
+     * @param datas - Vertex attribute data arrays
+     */
+    public void storeDataArrays(float[]... datas){
+        storeDataArrays(findStrides(datas), datas);
+    }
+
+    /**
+     * Stores the given data arrays into the VAO,
+     * essentially making the VAO a representation of the data inside these arrays.
+     * 
+     * @param strides - The strides of each data array
+     * @param datas - Vertex attribute data arrays
+     */
+    public void storeDataArrays(int[] strides, float[]...datas){
+        for(int i = 0; i < datas.length; i ++){
+            createAttribute(i, strides[i], datas[i]);
+        }
+    }
+
+    /**
      * 
      * Stores the given indices and data arrays into the VAO,
      * esentially making the VAO a representation of the data inside these arrays.
