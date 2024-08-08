@@ -19,12 +19,14 @@ public class GameFile {
 
     public GameFile(String path){
         this.path = path;
-        read(path);
     }
 
-    public void read(String path){
-        InputStreamReader isr = new InputStreamReader(ClassLoader.getSystemClassLoader().getResourceAsStream(path));
-        BufferedReader br = new BufferedReader(isr);
+    public GameFile read(){
+        return read(path);
+    }
+
+    public GameFile read(String path){
+        BufferedReader br = getReader();
         String line;
         try{
             while((line = br.readLine()) != null) {
@@ -33,10 +35,71 @@ public class GameFile {
         } catch(Exception e){
             e.printStackTrace();
         }
+        return this;
+    }
+
+    public GameFile advance(String next){
+        path += "/" + next;
+        return this;
+    }
+
+    public GameFile clearData(){
+        data.clear();
+        return this;
+    }
+
+    public GameFile clearPath(){
+        this.path = "/";
+        return this;
+    }
+
+    public GameFile clear(){
+        clearData();
+        return clearPath();
+    }
+
+    public GameFile setPath(String path){
+        this.path = path;
+        return this;
+    }
+
+    public boolean exists(){
+        return getStream() != null;
+    }
+
+    public boolean isFolder(){
+        String[] args = path.split("/");
+        return args[args.length - 1].contains("\\.");
+    }
+
+    public GameFile getDirectory(){
+        return new GameFile(getDirectoryPath());
+    }
+
+    public GameFile getLastValidDirectory(){
+        GameFile directory = getDirectory();
+        if(directory.exists()){
+            return directory;
+        }
+        return directory.getLastValidDirectory();
+    }
+
+    public String getDirectoryPath(){
+        String[] args = path.split("/");
+        StringBuilder sb = new StringBuilder();
+        for(int i = 0; i < args.length - 1; i++){
+            sb.append(args).append("/");
+        }
+        return sb.toString();
     }
 
     public String getPath(){
         return path;
+    }
+
+    public String getName(){
+        String[] args = path.split("/");
+        return args[args.length - 1];
     }
 
     public String getAbsolutePath(){
@@ -99,6 +162,10 @@ public class GameFile {
                 }
             }
         }
+    }
+
+    public static GameFile readFile(String path){
+        return new GameFile(path).read();
     }
     
 }

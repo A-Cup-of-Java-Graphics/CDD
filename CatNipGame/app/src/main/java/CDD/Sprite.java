@@ -1,23 +1,32 @@
 package CDD;
 
+import java.util.Properties;
+
 import org.joml.Matrix4f;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
+import CDD.models.Model;
 import CDD.models.TexturedModel;
 
 public class Sprite {
 
-    public Vector3f position;
+    private Vector3f position;
+    private Vector3f color;
     private Vector2f scale;
     private float rotation;
-    private TexturedModel model;
+    private Model model;
 
-    public Sprite(TexturedModel model, Vector3f position, Vector2f scale, float rotation){
+    public Sprite(Model model, Vector3f color, Vector3f position, Vector2f scale, float rotation){
         this.model = model;
+        this.color = color;
         this.position = position;
         this.scale = scale;
         this.rotation = rotation;
+    }
+
+    public Sprite(Model model, Vector3f position, Vector2f scale, float rotation){
+        this(model, new Vector3f(1), position, scale, rotation);
     }
 
     public Matrix4f getTransformation(){
@@ -28,8 +37,16 @@ public class Sprite {
         return identity;
     }
 
-    public TexturedModel getTexturedModel(){
+    public Model getModel(){
         return model;
+    }
+
+    public Vector3f getColor(){
+        return color;
+    }
+
+    public void setColor(Vector3f color){
+        this.color = color;
     }
 
     public Vector3f getPosition() {
@@ -54,6 +71,19 @@ public class Sprite {
 
     public void setRotation(float rotation) {
         this.rotation = rotation;
+    }
+
+    public Properties store(String prefix, Properties properties){
+        String id = toString();
+        properties.setProperty(prefix + "sprite", id);
+        properties.setProperty(prefix + "sprite." + id + ".texturedModel", model.toString());
+        properties.setProperty(prefix + "sprite." + id + ".position.x", "" + position.x);
+        properties.setProperty(prefix + "sprite." + id + ".position.y", "" + position.y);
+        properties.setProperty(prefix + "sprite." + id + ".position.z", "" + position.z);
+        properties.setProperty(prefix + "sprite." + id + ".scale.x", "" + scale.x);
+        properties.setProperty(prefix + "sprite." + id + ".scale.y", "" + scale.y);
+        properties.setProperty(prefix + "sprite." + id + ".rotation", "" + rotation);
+        return properties;
     }
     
 }

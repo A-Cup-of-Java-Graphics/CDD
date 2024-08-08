@@ -1,21 +1,17 @@
 package CDD;
-import java.awt.Polygon;
-import java.awt.geom.Line2D;
-import java.awt.geom.Line2D.Double;
 import java.nio.DoubleBuffer;
-import java.util.ArrayList;
-import java.util.List;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.glfw.GLFW;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR;
+import static org.lwjgl.glfw.GLFW.GLFW_CURSOR_NORMAL;
+import static org.lwjgl.glfw.GLFW.GLFW_PRESS;
+import static org.lwjgl.glfw.GLFW.glfwGetCursorPos;
+import static org.lwjgl.glfw.GLFW.glfwGetKey;
+import static org.lwjgl.glfw.GLFW.glfwSetInputMode;
 
-import CDD.CollisionMap.CollisionMap;
-import CDD.CollisionMap.EnumMarkerColorThresholds;
 import CDDPhysics.EnumKeys;
 import CDDPhysics.Scene;
-import CDDPhysics.Character;
-
-import static org.lwjgl.glfw.GLFW.*;
 
 @SuppressWarnings("unused")
 public class Input {
@@ -78,6 +74,9 @@ public class Input {
             scene.getSettings().hitKey(EnumKeys.MOVE_LEFT).accept(scene);
         }else if(KeyPressed(window, scene.getSettings().getKeyFor(EnumKeys.MOVE_RIGHT))){
             scene.getSettings().hitKey(EnumKeys.MOVE_RIGHT).accept(scene);
+        }
+        if(KeyPressed(window, scene.getSettings().getKeyFor(EnumKeys.INTERACT))){
+            scene.getSettings().hitKey(EnumKeys.INTERACT).accept(scene);
         }
         if(KeyPressed(window, GLFW.GLFW_KEY_TAB)){
             CDDGame.TRIGGER = !CDDGame.TRIGGER;

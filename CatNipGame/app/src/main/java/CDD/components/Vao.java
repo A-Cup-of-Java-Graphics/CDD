@@ -67,9 +67,10 @@ public class Vao {
      * <br>Should never be used outside of the constructor.
      * 
      */
-    private void create(){
+    private Vao create(){
         id = GL30.glGenVertexArrays();
         vaos.add(this);
+        return this;
     }
 
     /**
@@ -80,8 +81,9 @@ public class Vao {
      * {@link Vao#storeData(int[], int[], float[][])}.
      * 
      */
-    public void bind(){
+    public Vao bind(){
         GL30.glBindVertexArray(id);
+        return this;
     }
 
     /**
@@ -90,8 +92,9 @@ public class Vao {
      * <br>Is optional, since binding a VAO will automatically unbound the previous one.
      * 
      */
-    public void unbind(){
+    public Vao unbind(){
         GL30.glBindVertexArray(0);
+        return this;
     }
 
     /**
@@ -106,8 +109,9 @@ public class Vao {
      * @param bytesPerVertex - Number of bytes per vertex. This is equal to attrSize * bytesPerDataType
      * @param offset - Whether or not this attribute should start with an offset, and if so, how much.
      */
-    public void bindAttribute(int attrNum, int attrSize, int dataType, boolean normalized, int bytesPerVertex, int offset){
+    public Vao bindAttribute(int attrNum, int attrSize, int dataType, boolean normalized, int bytesPerVertex, int offset){
         GL30.glVertexAttribPointer(attrNum, attrSize, dataType, normalized, bytesPerVertex, offset);
+        return this;
     }
 
     /**
@@ -154,8 +158,9 @@ public class Vao {
      * 
      * @param attrNum
      */
-    public void enableAttribute(int attrNum){
+    public Vao enableAttribute(int attrNum){
         GL20.glEnableVertexAttribArray(attrNum);
+        return this;
     }
 
     /**
@@ -174,8 +179,9 @@ public class Vao {
      * </p>
      * @param attrNum
      */
-    public void disableAttribute(int attrNum){
+    public Vao disableAttribute(int attrNum){
         GL20.glDisableVertexAttribArray(attrNum);
+        return this;
     }
 
     /**
@@ -184,13 +190,14 @@ public class Vao {
      * <br>See {@link Vao#enableAttribute(int)} for more info.
      * 
      */
-    public void enableAttributes(){
+    public Vao enableAttributes(){
         for(int i = 0; i < vbos.length; i++){
             Vbo vbo = vbos[i];
             if(vbo != null){
                 enableAttribute(i);
             }
         }
+        return this;
     }
 
     /**
@@ -199,13 +206,14 @@ public class Vao {
      * <br>See {@link Vao#disableAttribute(int)} for more info.
      * 
      */
-    public void disableAttributes(){
+    public Vao disableAttributes(){
         for(int i = 0; i < vbos.length; i++){
             Vbo vbo = vbos[i];
             if(vbo != null){
                 disableAttribute(i);
             }
         }
+        return this;
     }
 
     /**
@@ -251,8 +259,8 @@ public class Vao {
      * 
      * @param datas - Vertex attribute data arrays
      */
-    public void storeDataArrays(float[]... datas){
-        storeDataArrays(findStrides(datas), datas);
+    public Vao storeDataArrays(float[]... datas){
+        return storeDataArrays(findStrides(datas), datas);
     }
 
     /**
@@ -262,10 +270,11 @@ public class Vao {
      * @param strides - The strides of each data array
      * @param datas - Vertex attribute data arrays
      */
-    public void storeDataArrays(int[] strides, float[]...datas){
+    public Vao storeDataArrays(int[] strides, float[]...datas){
         for(int i = 0; i < datas.length; i ++){
             createAttribute(i, strides[i], datas[i]);
         }
+        return this;
     }
 
     /**
@@ -276,8 +285,8 @@ public class Vao {
      * @param indices - The indices for the mesh
      * @param datas - An array of data arrays that represent the mesh's vertex attributes
      */
-    public void storeData(int[] indices, float[]...datas){
-        storeData(indices, findStrides(datas), datas);
+    public Vao storeData(int[] indices, float[]...datas){
+        return storeData(indices, findStrides(datas), datas);
     }
 
     /**
@@ -292,11 +301,12 @@ public class Vao {
      * @param strides - The strides of each data array
      * @param datas - An array of data arrays that represent the mesh's vertex attributes
      */
-    public void storeData(int[] indices, int[] strides, float[]...datas){
+    public Vao storeData(int[] indices, int[] strides, float[]...datas){
         for(int i = 0; i < datas.length; i ++){
             createAttribute(i, strides[i], datas[i]);
         }
         createIndexBuffer(indices);
+        return this;
     }
 
     /**
@@ -323,7 +333,7 @@ public class Vao {
      * Executes {@link Vao#delete()} on all Vaos created
      * 
      */
-    public void cleanUp(){
+    public static void cleanUp(){
         for(Vao vao : vaos){
             vao.delete();
         }

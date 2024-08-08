@@ -1,14 +1,18 @@
 package CDDPhysics;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import CDD.Camera;
 import CDD.render.FinalRenderer;
+import CDDPhysics.collision.Collision;
 
 public class Scene {
 
-    private List<GameObject> objects = new ArrayList<GameObject>();
+    private Map<EnumGameObjects, GameObject> objects = new HashMap<EnumGameObjects, GameObject>();
     private Character character;
     private Settings settings;
     private Camera camera;
@@ -25,7 +29,18 @@ public class Scene {
         renderer.render(camera);
     }
 
-    public List<GameObject> getObjects() {
+    public void interact(Character character){
+        for(Interactable interactable : (Iterable<Interactable>) objects.get(EnumGameObjects.INTERACTABLE)){
+            Collision collision = new Collision(character.getCollider(), interactable.getCollider());
+            if(collision.canCollide()){
+                if(collision.isColliding()){
+                    interactable.interact(character);
+                }
+            }
+        }
+    }
+
+    public Map<EnumGameObjects, GameObject> getObjects() {
         // TODO Auto-generated method stub
         throw new UnsupportedOperationException("Unimplemented method 'getObjects'");
     }
@@ -76,6 +91,14 @@ public class Scene {
 
     public void setRenderer(FinalRenderer renderer){
         this.renderer = renderer;
+    }
+
+    public Properties store(String prefix, Properties properties){
+        properties.setProperty("cameraSettings.fov", "" + camera.getFov());
+        properties.setProperty("cameraSettings.position.x", "" + camera.getPosition().x);
+        properties.setProperty("cameraSettings.position.y", "" + camera.getPosition().y);
+        properties.setProperty("cameraSettings.position.z", "" + camera.getPosition().z);
+        return properties;
     }
     
 }

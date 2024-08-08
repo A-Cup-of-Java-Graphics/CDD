@@ -14,9 +14,7 @@ import CDDPhysics.GameObject;
 public class AABB extends Collider {
 
     public AABB(Vector2f position, Vector2f bounds, GameObject host){
-        this.position = position;
-        this.bounds = bounds;
-        this.host = host;
+        super(host, position, bounds);
         this.vertices = calculateVertices();
         this.sides = calculateSides();
         this.axis = calculateAxis();
@@ -40,22 +38,10 @@ public class AABB extends Collider {
         sides.put(new Edge(vertices.get(3), vertices.get(0)), new Vector2f(-1, 0));
         return sides;
     }
-    /*
-    protected Vector2f[] calculateNormals(){
-        Vector2f[] normals = new Vector2f[edges.length];
-        for(int i = 0; i < edges.length; i ++){
-            Edge edge = edges[i];
-            Vector2f dir = edge.getDirection();
-            Vector3f d = new Vector3f(dir.x, dir.y, 0).rotateZ((float) Math.PI/2f);
-            normals[i] = new Vector2f(d.x, d.y).normalize();
-        }
-        return normals;
-    }*/
 
     public boolean intersects(Edge edge){
         for(Edge e : getEdges()){
             if(e.intersects(edge)){
-                System.out.println("AABB");
                 return true;
             }
         }

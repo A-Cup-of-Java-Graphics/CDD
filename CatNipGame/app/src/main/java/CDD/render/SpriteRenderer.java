@@ -7,6 +7,7 @@ import java.util.Map;
 
 import CDD.Camera;
 import CDD.Sprite;
+import CDD.models.Model;
 import CDD.models.TexturedModel;
 import CDD.shader.BaseShader;
 
@@ -21,14 +22,14 @@ import CDD.shader.BaseShader;
  */
 public class SpriteRenderer {
 
-    private BaseShader shader = new BaseShader();
+    private SpriteShader shader = new SpriteShader();
 
     /**
      * Batches of sprites. This makes rendering less expensive, as we can effectively recycle
      * the Vao and Texture from 1 VAO for the entire batch, and so every individual sprite
      * would only need to funnel their Model Transformation Matrix into the shader.
      */
-    private Map<TexturedModel, List<Sprite>> sprites = new HashMap<TexturedModel, List<Sprite>>();
+    private Map<Model, List<Sprite>> sprites = new HashMap<Model, List<Sprite>>();
 
     /**
      * 
@@ -63,35 +64,44 @@ public class SpriteRenderer {
     public void render(Camera camera){
         shader.start();
         shader.setView(camera.getTransformation());
-        for(TexturedModel texturedModel : sprites.keySet()){
-            prepare(texturedModel);
-            shader.setTexture0(texturedModel.getTexture());
-            for(Sprite sprite : sprites.get(texturedModel)){
-                shader.setModel(sprite.getTransformation());
-                texturedModel.render();
+        for(Model model : sprites.keySet()){
+            prepare(model);
+            if(model instanceof TexturedModel texturedModel){
+                shader.setTexture0(texturedModel.getTexture());
             }
-            unprepare(texturedModel);
+            for(Sprite sprite : sprites.get(model)){
+                shader.setColor(sprite.getColor());
+                shader.setModel(sprite.getTransformation());
+                model.render();
+            }
+            unprepare(model);
         }
         shader.stop();
     }
 
-    public void prepare(TexturedModel texturedModel){
+    public void prepare(Model model){
         //nothing yet;
-        texturedModel.bind();
+        model.bind();
     }
 
-    public void unprepare(TexturedModel texturedModel){
+    public void unprepare(Model model){
         //nothing yet
-        texturedModel.unbind();
+        model.unbind();
     }
 
     public void addSprite(Sprite sprite){
-        if(sprites.containsKey(sprite.getTexturedModel())){
-            sprites.get(sprite.getTexturedModel()).add(sprite);
+        if(sprites.containsKey(sprite.getModel())){
+            sprites.get(sprite.getModel()).add(sprite);
         }else{
             List<Sprite> list = new ArrayList<Sprite>();
             list.add(sprite);
-            sprites.put(sprite.getTexturedModel(), list);
+            sprites.put(sprite.getModel(), list);
+        }
+    }
+
+    public void addSprites(List<? extends Sprite> sprites){
+        for(Sprite sprite : sprites){
+            addSprite(sprite);
         }
     }
     

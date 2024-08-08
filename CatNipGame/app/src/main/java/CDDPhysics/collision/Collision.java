@@ -11,6 +11,7 @@ import java.util.Set;
 import java.util.Vector;
 
 import org.joml.Vector2f;
+import org.joml.Vector3f;
 
 import CDD.util.Tuple;
 
@@ -37,13 +38,11 @@ public class Collision {
         edges.put(right, new HashSet<Edge>());
         for(Edge edge : left.getEdges()){
             if(right.intersects(edge)){
-                System.out.println("PROOF");
                 edges.get(left).add(edge);
             }
         }
         for(Edge edge : right.getEdges()){
             if(left.intersects(edge)){
-                System.out.println("PROVEN");
                 edges.get(right).add(edge);
             }
         }
@@ -60,29 +59,27 @@ public class Collision {
         for(Edge leftEdge : edges.get(left)){
             Vector2f normal = left.getSides().get(leftEdge);
             for(Edge rightEdge : edges.get(right)){
+                Vector2f rightNormal = right.getSides().get(rightEdge);
+                if(normal.dot(rightNormal) == 1) continue;
                 Vector2f ovl = leftEdge.overlap(rightEdge);
                 float ovlap = Math.max(ovl.x, ovl.y);
                 if(ovlap > overlap){
-                    System.out.println(leftEdge + " " + ovlap);
                     overlap = ovlap;
                     normalPair[0] = normal;
-                    normalPair[1] = right.getSides().get(rightEdge);
+                    normalPair[1] = rightNormal;
                     edgePair[0] = leftEdge;
                     edgePair[1] = rightEdge;
                 }
             }
         }
-        System.out.println("KORQ " + edges.get(left).size() + " " + edges.get(right).size());
         Vector2f distance = edgePair[0].distance(edgePair[1].getOrigin());
         Vector2f interspace = edgePair[0].distance(edgePair[1].getEnd());
-        Vector2f movement = (distance.dot(normalPair[0]) > 0 ? interspace : distance).absolute();
-        movement = new Vector2f((float) Math.max(movement.x, 5), (float) Math.max(movement.y, 5));
-        //movement.add(13, 13);
-        Vector2f vec = normalPair[1].mul(movement, new Vector2f());
-        //vec = new Vector2f((float) Math.max(vec.x, 10), (float) Math.max(vec.y, 10));
-        System.out.println("NORM " + movement + " " + normalPair[1] + " " + edgePair[0] + " " + edgePair[1] + " " + distance + " " + interspace);
-        forces.put(left, vec);//normalPair[1].mul(vec, new Vector2f()));
-        forces.put(right, normalPair[0].mul(10, new Vector2f()));
+        Vector2f movement = (distance.dot(normalPair[1]) > 0 ? interspace : distance).absolute();
+        if(movement.x == 0 && movement.y == 0){
+            movement.set(1, 1);
+        }
+        forces.put(left, normalPair[1].mul(movement, new Vector2f()));
+        forces.put(right, normalPair[0].mul(movement, new Vector2f()));
         return forces;
     }
 
@@ -90,11 +87,8 @@ public class Collision {
         int i = 0;
         int numAxis = left.getAxis().size() + right.getAxis().size();
         while(i < numAxis && isColliding()){
-            System.out.println(numAxis);
             i++;
-            System.out.println("ISCOL");
             forces = forces();
-            System.out.println("FORCE" + forces.get(left));
             if(forces.get(left).equals(0, 0) || forces.get(right).equals(0, 0)){
                 break;
             }

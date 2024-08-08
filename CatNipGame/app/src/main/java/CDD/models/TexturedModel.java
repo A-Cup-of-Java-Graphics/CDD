@@ -1,5 +1,7 @@
 package CDD.models;
 
+import java.util.Properties;
+
 import CDD.texture.Texture;
 
 public class TexturedModel extends Model {
@@ -22,6 +24,16 @@ public class TexturedModel extends Model {
 
     public Texture getTexture(){
         return texture;
+    }
+
+    public Properties store(String prefix, Properties properties){
+        String id = toString();
+        properties.setProperty(prefix + "texturedModel", id);
+        properties.setProperty(prefix + "texturedModel." + id + ".texture", texture.toString());
+        properties.setProperty(prefix + "texturedModel." + id + ".vao", getVao().toString());
+        properties.setProperty(prefix + "texturedModel." + id + ".drawMode", "" + getDrawMode());
+        properties.setProperty(prefix + "texturedModel." + id + ".usingElements", "" + isUsingElements());
+        return properties;
     }
     
 }

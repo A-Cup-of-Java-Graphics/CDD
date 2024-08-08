@@ -35,7 +35,7 @@ public abstract class Uniform {
                 return new UniformMatrix(name, programID, 4);
             case "float":
                 return new UniformFloat(name, programID);
-            case "boolean":
+            case "bool":
                 return new UniformBoolean(name, programID);
             case "sampler2D":
             case "sampler2DShadow":

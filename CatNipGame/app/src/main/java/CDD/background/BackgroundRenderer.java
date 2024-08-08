@@ -5,7 +5,8 @@ import org.lwjgl.opengl.GL11;
 
 import CDD.Camera;
 import CDD.Sprite;
-import CDD.shader.BaseShader;
+import CDD.models.TexturedModel;
+import CDD.util.GameMaths;
 
 public class BackgroundRenderer {
 
@@ -79,12 +80,13 @@ public class BackgroundRenderer {
         if(background != null){
             GL11.glDepthMask(false);
             shader.start();
-            shader.setView(new Matrix4f());
-            background.getTexturedModel().bind();
-            shader.setTexture0(background.getTexturedModel().getTexture());
+            shader.setView(GameMaths.IDENTITY);
+            background.getModel().bind();
+            if(background.getModel() instanceof TexturedModel texturedModel)
+                shader.setTexture0(texturedModel.getTexture());
             shader.setModel(background.getTransformation());
-            background.getTexturedModel().render();
-            background.getTexturedModel().unbind();
+            background.getModel().render();
+            background.getModel().unbind();
             shader.stop();
             GL11.glDepthMask(true);
         }

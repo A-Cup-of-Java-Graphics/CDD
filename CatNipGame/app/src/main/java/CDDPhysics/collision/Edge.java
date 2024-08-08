@@ -8,7 +8,6 @@ public class Edge {
 
     private Vector2f origin;
     private Vector2f end;
-    private float rotation;
 
     public Edge(Vector2f origin, Vector2f end){
         this.origin = origin;
@@ -47,15 +46,11 @@ public class Edge {
         float originProjected = other.getDirection().dot(origin);
         float endProjected = other.getDirection().dot(end);
         float min1 = Math.min(originProjected, endProjected);
-        System.out.println(other.getDirection());
-        System.out.println(other);
         float overlap = other.overlap(min1, min1 == originProjected ? endProjected : originProjected);
         float otherOriginProjected = getDirection().dot(other.origin);
         float otherEndProjected = getDirection().dot(other.end);
         float min2 = Math.min(otherOriginProjected, otherEndProjected);
         float overlap2 = overlap(min2, min2 == otherOriginProjected ? otherEndProjected : otherOriginProjected);
-        System.out.println(overlap + " -- " + overlap2);
-        System.out.println(getDirection());
         return new Vector2f(overlap, overlap2);
     }
 
@@ -63,7 +58,6 @@ public class Edge {
         if(min == max) return 0;
         float origin = getOrigin().dot(getDirection());
         float end = origin + length();
-        System.out.println(max + " " + min + " -> " + origin + " " + end);
         return Math.abs(Math.min(end, max) - Math.max(origin, min));
     }
 
@@ -108,7 +102,6 @@ public class Edge {
 
         Vector2f endd = endProj.sub(edge.end);
         Vector2f origind = originProj.sub(edge.origin);
-        System.out.println("RECASE " + endd.angle(normal));
         if(endd.angle(normal) == 0){
             return (float) Math.sqrt(endd.lengthSquared());
         }else if(origind.angle(normal) == 0){

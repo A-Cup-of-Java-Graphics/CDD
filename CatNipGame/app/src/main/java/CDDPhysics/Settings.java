@@ -17,10 +17,12 @@ public class Settings {
         setKeyInteraction(EnumKeys.MOVE_BACKWARD, (sc) -> {sc.getCharacter().move(0, -5f);});
         setKeyInteraction(EnumKeys.MOVE_LEFT, (sc) -> {sc.getCharacter().move(-5f, 0);});
         setKeyInteraction(EnumKeys.MOVE_RIGHT, (sc) -> {sc.getCharacter().move(5f, 0);});
+        setKeyInteraction(EnumKeys.INTERACT, (sc) -> {sc.interact(sc.getCharacter());});
         setKeyFor(EnumKeys.MOVE_FORWARD, GLFW.GLFW_KEY_W);
         setKeyFor(EnumKeys.MOVE_LEFT, GLFW.GLFW_KEY_A);
         setKeyFor(EnumKeys.MOVE_BACKWARD, GLFW.GLFW_KEY_S);
         setKeyFor(EnumKeys.MOVE_RIGHT, GLFW.GLFW_KEY_D);
+        setKeyFor(EnumKeys.INTERACT, GLFW.GLFW_KEY_E);
     }
 
     public Consumer<Scene> hitKey(EnumKeys key){

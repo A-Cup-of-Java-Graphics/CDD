@@ -11,6 +11,7 @@ public class GameObject {
     private Sprite sprite;
 
     private Vector3f position;
+    private Vector3f lastPosition;
     private Vector2f scale;
     private Vector2f speed;
     private float rotation;
@@ -21,6 +22,7 @@ public class GameObject {
     public GameObject(Sprite sprite, Collider collider, Vector3f position, Vector2f scale, float rotation, float mass, boolean canMove){
         this.sprite = sprite;
         this.position = position;
+        this.lastPosition = new Vector3f(position);
         this.scale = scale;
         this.rotation = rotation;
         this.mass = mass;
@@ -36,6 +38,10 @@ public class GameObject {
         return position;
     }
 
+    public Vector3f getLastPosition(){
+        return lastPosition;
+    }
+
     public Vector2f getScale(){
         return scale;
     }
@@ -48,11 +54,16 @@ public class GameObject {
         return mass;
     }
 
+    public Collider getCollider(){
+        return collider;
+    }
+
     public void move(Vector2f translation){
         move(translation.x, translation.y);
     }
 
     public void move(float x, float y){
+        this.lastPosition.set(this.position);
         this.position.add(x, y, 0);
         this.sprite.getPosition().x = position.x;
         this.sprite.getPosition().y = position.y;

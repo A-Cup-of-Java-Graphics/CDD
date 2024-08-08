@@ -2,6 +2,7 @@ package CDD.render;
 
 import CDD.Camera;
 import CDD.background.BackgroundRenderer;
+import CDD.gui.GUIRenderer;
 
 /**
  * 
@@ -17,6 +18,7 @@ public class FinalRenderer {
 
     public SpriteRenderer spriteRenderer;
     public BackgroundRenderer backgroundRenderer;
+    public GUIRenderer guiRenderer;
 
     /**
      * 
@@ -27,11 +29,13 @@ public class FinalRenderer {
     public FinalRenderer(Camera camera){
         spriteRenderer = new SpriteRenderer(camera);
         backgroundRenderer = new BackgroundRenderer(camera);
+        guiRenderer = new GUIRenderer(camera);
     }
 
     public void setProjection(Camera camera){
         spriteRenderer.setProjection(camera);
         backgroundRenderer.setProjection(camera);
+        guiRenderer.setProjection(camera);
     }
 
     /**
@@ -43,6 +47,7 @@ public class FinalRenderer {
     public void render(Camera camera){
         backgroundRenderer.render();
         spriteRenderer.render(camera);
+        guiRenderer.render(camera);
     }
     
 }

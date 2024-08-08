@@ -23,6 +23,12 @@ public abstract class Collider {
     protected float rotation = 0;
     protected GameObject host;
 
+    public Collider(GameObject host, Vector2f position, Vector2f bounds){
+        this.host = host;
+        this.position = position;
+        this.bounds = bounds;
+    }
+
     public void move(float x, float y){
         this.position.add(x, y);
         for(Vector2f vertex : vertices){

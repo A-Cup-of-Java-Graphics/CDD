@@ -30,21 +30,21 @@ public class Model {
     }
 
     public void bind(){
-        getVao().bind();
-        getVao().enableAttributes();
-        getVao().getEbo().bind();
+        getVao().bind().enableAttributes();
+        if(getVao().getEbo() != null)
+            getVao().getEbo().bind();
     }
 
     public void unbind(){
-        getVao().getEbo().unbind();
-        getVao().disableAttributes();
-        getVao().unbind();
+        if(getVao().getEbo() != null)
+            getVao().getEbo().unbind();
+        getVao().disableAttributes().unbind();
     }
 
     public void render(){
-        if(useElements)
+        if(useElements){
             GL15.glDrawElements(drawMode, vao.getIndexCount(), GL11.GL_UNSIGNED_INT, 0);
-        else
+        }else
             GL15.glDrawArrays(drawMode, 0, vao.getVertexCount());
     }
     
