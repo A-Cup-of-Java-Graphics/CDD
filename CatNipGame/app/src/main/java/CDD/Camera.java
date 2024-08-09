@@ -4,6 +4,8 @@ import org.joml.Matrix4f;
 import org.joml.Vector3f;
 import org.lwjgl.system.MemoryUtil;
 
+import CDD.window.Window;
+
 public class Camera{
 
     public Vector3f position = new Vector3f();
@@ -51,15 +53,12 @@ public class Camera{
         return orthographic;
     }
 
-    public void calculateOrthographic(float zNear, float zFar){
-        int[] dimension = Window.getFrameBufferDimensions();
+    public void calculateOrthographic(Window window, float zNear, float zFar){
+        int[] dimension = window.getFrameBufferDimensions();
         calculateOrthographic(dimension[0], dimension[1], zNear, zFar);
     }
 
     public void calculateOrthographic(float width, float height, float zNear, float zFar){
-        if(Window.WindowHandle == MemoryUtil.NULL){
-            throw new UnsupportedOperationException("Window has not been created yet, please use this method only after the window has been created");
-        }
 		float aspectRatio = (float) width / (float) height;
         setOrthographic(-aspectRatio * fov, aspectRatio * fov, fov, -fov, zNear, zFar);
     }

@@ -22,8 +22,12 @@ import CDD.gui.GUI;
 import CDD.models.Model;
 import CDD.models.TexturedModel;
 import CDD.render.FinalRenderer;
+import CDD.shape.Shapes;
+import CDD.sprite.Sprite;
 import CDD.texture.Texture;
 import CDD.util.GameFile;
+import CDD.window.EnumWindowPreset;
+import CDD.window.Window;
 import CDDPhysics.Character;
 import CDDPhysics.Scene;
 import CDDPhysics.collision.AABB;
@@ -32,23 +36,23 @@ import CDDPhysics.collision.Edge;
 import CDDPhysics.collision.PolygonBoundingBox;
 
 import Logic.GUI.GridLayout;
+import Logic.Input.Input;
+
+import org.joml.Vector4f;
+
+import Logic.Input.EnumInputStatus;
 
 public class CDDGame {
 
 	public static boolean TRIGGER = false;
 	public static void main(String[] args) {
-		int Red = 255;
-			int Green = 0;
-			int Blue = 0;
-			int Alpha = 0;
 		SyncTimer timer = new SyncTimer(SyncTimer.JAVA_NANO);
-		new Window().Create();
+		Window window = new Window("CatDrugDealer", new Vector4f(1, 0, 0, 1), EnumWindowPreset.DEFAULT);
         GL.createCapabilities();
-		Window.SetRGBA(Red, Green, Blue, Alpha);
 		//Window.Update(300);
 		//long LastKeyCheck = Time.CurrentMilliTime();
 		Camera camera = new Camera(new Vector3f(0, 0, 0), 250);
-		camera.calculateOrthographic(0.0001f, 1000);
+		camera.calculateOrthographic(window, 0.0001f, 1000);
 		Shapes.createDefaultVaos();
 		Shapes.createDefaultModels();
 		TexturedModel texModel = new TexturedModel(Shapes.squareModel(), Texture.loadFromSTBI(GameFile.readFile("CDD/textures/extremeCat.png"), true, 1024));
@@ -115,7 +119,7 @@ public class CDDGame {
 		renderer.spriteRenderer.addSprite(cat);
 		renderer.spriteRenderer.addSprite(back);
 		Scene scene = new Scene(character, camera, renderer);
-		Window.scene = scene;
+		window.setScene(scene);
 		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		float delta;
 		List<Sprite> sprs = new ArrayList<Sprite>();
@@ -144,14 +148,15 @@ public class CDDGame {
 		}
 		GridLayout gl = new GridLayout(slots, new Vector3f(-225, -80, -2f), new Vector2f(50), 0, 7, new Vector2f(1f));
 		renderer.guiRenderer.addGUIs(gl.getGuis());
-		while (!glfwWindowShouldClose(Window.WindowHandle)) {
+		Input.getInput().setStatus(EnumInputStatus.MOVING);
+		while (!glfwWindowShouldClose(window.getAddress())) {
 			//long CurrentTime = Time.GetDiffInMilliSeconds(LastMilliTime);
 			//FrameLimiting code for inputs. Inputs will now register at 70fps
 			try{
 				int sync = timer.sync(70);
 				delta = sync;
 				for(int i = 0; i < delta; i++) {
-					Input.handleInputs(Window.WindowHandle, scene);
+					Input.getInput().handleInputs(window.getAddress(), scene);
 					int j = 0;
 					for(Edge edge : chara.getEdges()){
 						sprs.get(j).setPosition(new Vector3f(edge.getOrigin(), -1f));
@@ -165,11 +170,9 @@ public class CDDGame {
 			}catch(Exception e){
 				e.printStackTrace();
 			}
-			GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
-			GL11.glClearColor(Red, Green, Blue, Alpha);
+			window.clear();
 			scene.render();
-			GLFW.glfwPollEvents();
-			GLFW.glfwSwapBuffers(Window.WindowHandle);
+			window.refresh();
 		}
 	}
 }

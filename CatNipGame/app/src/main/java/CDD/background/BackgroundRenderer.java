@@ -4,8 +4,8 @@ import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 
 import CDD.Camera;
-import CDD.Sprite;
 import CDD.models.TexturedModel;
+import CDD.sprite.Sprite;
 import CDD.util.GameMaths;
 
 public class BackgroundRenderer {

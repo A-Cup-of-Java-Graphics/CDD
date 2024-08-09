@@ -20,10 +20,10 @@ import javax.sound.sampled.LineEvent;
 
 import org.lwjgl.opengl.GL11;
 
-import CDD.Shapes;
 import CDD.components.Vao;
 import CDD.models.Model;
 import CDD.models.TexturedModel;
+import CDD.shape.Shapes;
 import CDD.texture.Texture;
 import CDD.util.GameFile;
 

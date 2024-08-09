@@ -3,6 +3,7 @@ package CDD.render;
 import CDD.Camera;
 import CDD.background.BackgroundRenderer;
 import CDD.gui.GUIRenderer;
+import CDD.sprite.SpriteRenderer;
 
 /**
  * 

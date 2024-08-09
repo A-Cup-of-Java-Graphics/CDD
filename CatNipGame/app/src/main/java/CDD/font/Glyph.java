@@ -2,7 +2,7 @@ package CDD.font;
 
 import org.joml.Vector2i;
 
-import CDD.Shapes;
+import CDD.shape.Shapes;
 
 public class Glyph {
 

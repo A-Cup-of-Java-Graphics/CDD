@@ -3,9 +3,9 @@ package CDD.gui;
 import org.joml.Vector2f;
 import org.joml.Vector3f;
 
-import CDD.Shapes;
-import CDD.Sprite;
 import CDD.models.Model;
+import CDD.shape.Shapes;
+import CDD.sprite.Sprite;
 import CDD.texture.Texture;
 
 public class GUI extends Sprite{

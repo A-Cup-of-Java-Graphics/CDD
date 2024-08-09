@@ -23,6 +23,7 @@ public class Settings {
         setKeyFor(EnumKeys.MOVE_BACKWARD, GLFW.GLFW_KEY_S);
         setKeyFor(EnumKeys.MOVE_RIGHT, GLFW.GLFW_KEY_D);
         setKeyFor(EnumKeys.INTERACT, GLFW.GLFW_KEY_E);
+        setKeyFor(EnumKeys.HIT, GLFW.GLFW_KEY_F);
     }
 
     public Consumer<Scene> hitKey(EnumKeys key){

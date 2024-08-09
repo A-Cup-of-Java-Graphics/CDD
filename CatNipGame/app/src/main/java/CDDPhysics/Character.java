@@ -6,7 +6,7 @@ import org.joml.Vector2f;
 import org.joml.Vector3f;
 
 import CDD.Camera;
-import CDD.Sprite;
+import CDD.sprite.Sprite;
 import CDDPhysics.collision.Collider;
 
 public class Character extends GameObject {

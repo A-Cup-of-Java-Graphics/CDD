@@ -8,10 +8,10 @@ import java.util.Map;
 import org.lwjgl.opengl.GL11;
 
 import CDD.Camera;
-import CDD.Sprite;
 import CDD.font.Symbol;
 import CDD.models.Model;
 import CDD.models.TexturedModel;
+import CDD.sprite.Sprite;
 import CDD.texture.Texture;
 import CDD.util.GameFile;
 
